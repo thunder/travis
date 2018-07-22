@@ -48,26 +48,45 @@ install_with_composer() {
 
 create_drupal_project() {
     composer create-project drupal-composer/drupal-project:8.x-dev ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
-
     composer require drupal/core:${THUNDER_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-
-    require_local_project
-    install_with_composer
 }
 
 create_thunder_project() {
     composer create-project burdamagazinorg/thunder-project ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
-
     composer require burdamagazinorg/thunder:${THUNDER_TRAVIS_THUNDER_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+}
+
+create_project() {
+    local distribution=${1-"drupal"}
+
+    case ${distribution} in
+        "drupal")
+            create_drupal_project
+        ;;
+        "thunder")
+            create_thunder_project
+        ;;
+    esac
+
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     require_local_project
     install_with_composer
 }
 
-install_drupal() {
+install_project() {
+    local distribution=${1-"drupal"}
     local profile=${1-"standard"}
+
+    case ${distribution} in
+        "drupal")
+            profile="standard"
+        ;;
+        "thunder")
+            profile="thunder"
+        ;;
+    esac
+
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
 
     php core/scripts/drupal install ${profile} --no-interaction
