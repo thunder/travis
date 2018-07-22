@@ -42,7 +42,7 @@ require_local_project() {
     composer require ${THUNDER_TRAVIS_COMPOSER_NAME} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
-install_with_composer() {
+composer_install() {
     composer install --optimize-autoloader --apcu-autoloader --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
@@ -68,10 +68,14 @@ create_project() {
         ;;
     esac
 
+    # The folder where composer puts binaries, the default value is read from the projects composer.json
+    # TODO: I do not like this here, but we cannot know what the projects bin directory is in the environment.sh
+    THUNDER_TRAVIS_COMPOSER_BIN_DIR=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-`jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json`}
+
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     require_local_project
-    install_with_composer
+    composer_install
 }
 
 install_project() {
@@ -90,7 +94,7 @@ install_project() {
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
 
     php core/scripts/drupal install ${profile} --no-interaction
-    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bin/drush en simpletest
+    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/drush en simpletest
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
@@ -118,5 +122,5 @@ run_tests() {
     chmod u+w ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
     rm ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
 
-    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bin/phpunit --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
+    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/phpunit --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
 }
