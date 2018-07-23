@@ -55,7 +55,7 @@ require_local_project() {
 }
 
 composer_install() {
-    composer install --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    COMPOSER_MEMORY_LIMIT=-1 composer install --optimize-autoloader --apcu-autoloader --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 create_drupal_project() {
