@@ -160,7 +160,7 @@ run_tests() {
 
     if [ -f ${settings_file} ]
     then
-        chmod u+w dirname ${settings_file}
+        chmod u+w `dirname ${settings_file}`
         chmod u+w ${settings_file}
         rm ${settings_file}
     fi
