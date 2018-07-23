@@ -153,12 +153,6 @@ run_tests() {
         exit 1
     fi
 
-    if ! nc -z ${THUNDER_TRAVIS_SELENIUM_HOST} ${THUNDER_TRAVIS_SELENIUM_PORT} 2>/dev/null;
-    then
-        echo "The selenium server has not been started."
-        exit 1
-    fi
-
     if [ ${THUNDER_TRAVIS_TEST_GROUP} ]
     then
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
