@@ -80,7 +80,14 @@ create_project() {
 
 install_project() {
     local distribution=${1-"drupal"}
+    local drupal=core/scripts/drupal
     local profile=""
+
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)/${drupal} ];
+    then
+        echo "${distribution} was not installed correctly, please run create-project first."
+        exit 1
+    fi
 
     case ${distribution} in
         "drupal")
@@ -93,16 +100,24 @@ install_project() {
 
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
 
-    php core/scripts/drupal install ${profile} --no-interaction
+    php ${drupal} install ${profile} --no-interaction
     ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/drush en simpletest
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
 
 start_services() {
+    local drupal=core/scripts/drupal
+
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)/${drupal} ];
+    then
+        echo "${distribution} was not installed correctly, please run create-project first."
+        exit 1
+    fi
+
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
 
-    php core/scripts/drupal server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
     timeout 30 sh -c 'until nc -z $0 $1; do sleep 1; done' ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
@@ -113,6 +128,19 @@ start_services() {
 run_tests() {
     local test_selection=""
     local docroot=$(distribution_docroot)
+    local phpunit=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/phpunit
+
+    if [ ! -f ${phpunit} ];
+    then
+        echo "${distribution} was not installed correctly, please run create-project first."
+        exit 1
+    fi
+
+    if ! nc -z ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT} 2>/dev/null;
+    then
+        echo "The services have not been started."
+        exit 1
+    fi
 
     if [ ${THUNDER_TRAVIS_TEST_GROUP} ]; then
         test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
@@ -122,5 +150,5 @@ run_tests() {
     chmod u+w ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
     rm ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
 
-    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/phpunit --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
+    php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
 }
