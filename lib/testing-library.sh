@@ -25,7 +25,8 @@ get_composer_bin_dir() {
 }
 
 install_requirements() {
-    if ! [ -x "$(command -v eslint)" ]; then
+    if ! [ -x "$(command -v eslint)" ]
+    then
         npm install -g eslint
     fi
 }
@@ -33,18 +34,21 @@ install_requirements() {
 test_coding_style() {
     local check_parameters=""
 
-    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]
+    then
         check_parameters="${check_parameters} --phpcs"
     fi
 
-    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]
+    then
         check_parameters="${check_parameters} --javascript"
     fi
 
     bash check-guidelines.sh --init
     bash check-guidelines.sh -v ${check_parameters}
 
-    if [ $? -ne 0 ]; then
+    if [ $? -ne 0 ]
+    then
         return $?
     fi
 }
@@ -166,4 +170,9 @@ run_tests() {
     fi
 
     php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
+
+    if [ $? -ne 0 ]
+    then
+        return $?
+    fi
 }
