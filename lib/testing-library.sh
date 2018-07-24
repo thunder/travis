@@ -93,8 +93,10 @@ create_project() {
 install_project() {
     local distribution=${1-"drupal"}
     local drupal="core/scripts/drupal"
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local composer_bin_dir=$(get_composer_bin_dir)
     local profile=""
+    local additional_drush_parameter=""
 
     if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
     then
@@ -108,15 +110,14 @@ install_project() {
         ;;
         "thunder")
             profile="thunder"
+            additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo"
         ;;
     esac
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
+    mysql -e 'CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};'
 
-    php ${drupal} install ${profile} --no-interaction
-    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush en simpletest
-
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
+    /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
+    ${drush} en simpletest
 }
 
 start_services() {
@@ -130,8 +131,8 @@ start_services() {
 
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
-    nc -z -w 20 ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT}
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
@@ -151,7 +152,7 @@ run_tests() {
         exit 1
     fi
 
-    if ! nc -z ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT} 2>/dev/null;
+    if ! nc -z ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT} 2>/dev/null;
     then
         echo "The web server has not been started."
         exit 1
