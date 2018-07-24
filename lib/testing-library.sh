@@ -131,7 +131,7 @@ start_services() {
 
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} .ht.router.php &>/dev/null &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
