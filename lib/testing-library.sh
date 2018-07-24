@@ -92,9 +92,8 @@ create_project() {
 
 install_project() {
     local distribution=${1-"drupal"}
-    local drupal="core/scripts/drupal"
-    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local composer_bin_dir=$(get_composer_bin_dir)
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local profile=""
     local additional_drush_parameter=""
 
@@ -114,7 +113,7 @@ install_project() {
         ;;
     esac
 
-    mysql -e 'CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};'
+    mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
     /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
     ${drush} en simpletest
