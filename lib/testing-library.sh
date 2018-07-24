@@ -120,9 +120,7 @@ install_project() {
 }
 
 start_services() {
-    local drupal="core/scripts/drupal"
-
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ];
     then
         echo "${distribution} was not installed correctly, please run create-project first."
         exit 1
