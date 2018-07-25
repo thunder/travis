@@ -97,7 +97,7 @@ install_project() {
     local profile=""
     local additional_drush_parameter=""
 
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ];
     then
         echo "${distribution} was not installed correctly, please run create-project first."
         exit 1
