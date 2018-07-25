@@ -160,13 +160,6 @@ run_tests() {
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    if [ -f ${settings_file} ]
-    then
-        chmod u+w `dirname ${settings_file}`
-        chmod u+w ${settings_file}
-        rm ${settings_file}
-    fi
-
     php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
 
     if [ $? -ne 0 ]
