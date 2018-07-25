@@ -103,14 +103,14 @@ install_project() {
         ;;
         "thunder")
             profile="thunder"
-            additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo"
+            additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo=NULL"
         ;;
     esac
 
     mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
     /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
-    ${drush} en simpletest
+    ${drush} pm-enable simpletest
 }
 
 start_services() {
