@@ -121,8 +121,12 @@ start_services() {
         exit 1
     fi
 
-    php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} -t ${docroot} ${docroot}/.ht.router.php &>/dev/null &
+    cd ${docroot}
+
+    php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} .ht.router.php &>/dev/null &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
+
+    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
     docker run -d -v ${THUNDER_TRAVIS_PROJECT_BASEDIR}:/project --shm-size 256m --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 }
@@ -150,6 +154,7 @@ run_tests() {
 
     php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
 
+    # TODO: this does not work!
     if [ $? -ne 0 ]; then
         return $?
     fi
