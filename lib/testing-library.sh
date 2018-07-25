@@ -18,7 +18,7 @@ get_composer_bin_dir() {
         exit 1
     fi
 
-    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-`jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json`}
+    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
 
     echo ${composer_bin_dir}
 }
@@ -109,7 +109,7 @@ install_project() {
 
     mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
-    /usr/bin/env PHP_OPTIONS="-d sendmail_path=`which true`" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
+    /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
     ${drush} en simpletest
 }
 
@@ -119,6 +119,7 @@ start_services() {
         exit 1
     fi
 
+    # TODO: check if cd is still necessary
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
     php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} .ht.router.php &>/dev/null &
