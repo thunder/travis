@@ -160,7 +160,7 @@ run_tests() {
             php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit --verbose --debug -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection} || exit 1
         ;;
         "run-tests")
-            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php ${which php} --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
+            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php $(which php) --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
         ;;
     esac
 
