@@ -27,6 +27,13 @@ install_requirements() {
     if ! [ -x "$(command -v eslint)" ]; then
         npm install -g eslint
     fi
+
+  	# Increase the MySQL connection timeout on the PHP end.
+	echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+	echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+	mysql -e "SET GLOBAL wait_timeout = 36000;"
+	mysql -e "SET GLOBAL max_allowed_packet = 33554432;"
 }
 
 test_coding_style() {
