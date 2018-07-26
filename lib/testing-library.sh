@@ -136,7 +136,7 @@ start_services() {
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
-    docker run -d -v ${THUNDER_TRAVIS_PROJECT_BASEDIR}:/project --shm-size 256m --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
+    docker run -d -p 4444:4444 -v /dev/shm:/dev/shm --net=host selenium/standalone-chrome
 }
 
 run_tests() {
