@@ -153,7 +153,8 @@ run_tests() {
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
-    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php `which php` --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
+    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core
+    ../../vendor/bin/phpunit --verbose --debug ${test_selection}
+    #php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php `which php` --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
