@@ -131,12 +131,12 @@ start_services() {
 
     cd ${docroot}
 
-    php ${drupal} server --verbose --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
-    docker run -d -p 4444:4444 -v /dev/shm:/dev/shm --net=host selenium/standalone-chrome
+    docker run -d -v ${THUNDER_TRAVIS_PROJECT_BASEDIR}:/project --shm-size 512m --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 }
 
 run_tests() {
