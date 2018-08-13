@@ -29,11 +29,13 @@ install_requirements() {
     fi
 
   	# Increase the MySQL connection timeout on the PHP end.
-	echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-	echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  	if [ "$(command -v phpenv)" ] && [-f ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ]; then
+	    echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+	    echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+	fi
 
-	mysql -e "SET GLOBAL wait_timeout = 36000;"
-	mysql -e "SET GLOBAL max_allowed_packet = 33554432;"
+	mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL wait_timeout = 36000;"
+	mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL max_allowed_packet = 33554432;"
 }
 
 test_coding_style() {
@@ -114,7 +116,7 @@ install_project() {
         ;;
     esac
 
-    mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
+    mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
     /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
     ${drush} pm-enable simpletest
