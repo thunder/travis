@@ -65,4 +65,4 @@ source $(get_script_dir)/../lib/testing-library.sh
 
 ### Script ###
 
-install_project ${DISTRIBUTION}
+install_project

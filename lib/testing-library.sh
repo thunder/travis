@@ -91,9 +91,7 @@ move_assets() {
 }
 
 create_project() {
-    local distribution=${1-"drupal"}
-
-    case ${distribution} in
+    case ${DISTRIBUTION} in
         "drupal")
             create_drupal_project
         ;;
@@ -110,18 +108,17 @@ create_project() {
 }
 
 install_project() {
-    local distribution=${1-"drupal"}
     local composer_bin_dir=$(get_composer_bin_dir)
     local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local profile=""
     local additional_drush_parameter=""
 
     if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ]; then
-        echo "${distribution} was not installed correctly, please run create-project first."
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    case ${distribution} in
+    case ${DISTRIBUTION} in
         "drupal")
             profile="minimal"
         ;;
@@ -144,7 +141,7 @@ start_services() {
     local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
     if [ ! -f ${docroot}/index.php ]; then
-        echo "${distribution} was not installed correctly, please run create-project first."
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 

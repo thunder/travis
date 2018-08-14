@@ -69,4 +69,4 @@ install_requirements
 
 # Coding styles should be checked as early as possible, to fail as quickly as possible
 test_coding_style
-create_project ${DISTRIBUTION}
+create_project
