@@ -23,7 +23,11 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
-install_requirements() {
+prepare_environment() {
+    if [ -x "$(command -v phpenv)" ]; then
+        phpenv config-rm xdebug.ini
+    fi
+
     if ! [ -x "$(command -v eslint)" ]; then
         npm install -g eslint
     fi
