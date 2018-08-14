@@ -139,6 +139,7 @@ install_project() {
 
 start_services() {
     local drupal="core/scripts/drupal"
+    local composer_bin_dir=$(get_composer_bin_dir)
     local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
