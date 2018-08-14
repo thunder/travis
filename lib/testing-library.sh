@@ -58,10 +58,9 @@ test_coding_style() {
 }
 
 require_local_project() {
-    composer config --unset repositories.0 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer config repositories.project path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer config repositories.drupal composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer require "${THUNDER_TRAVIS_COMPOSER_NAME}:*" --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+	composer config repositories.0 ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+	composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require ${THUNDER_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 composer_install() {
@@ -135,7 +134,8 @@ start_services() {
 
     cd ${docroot}
 
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    #php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    drush runserver "${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" 2>&1  &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
