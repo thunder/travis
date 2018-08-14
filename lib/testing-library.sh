@@ -29,7 +29,7 @@ install_requirements() {
     fi
 
   	# Increase the MySQL connection timeout on the PHP end.
-  	if [ "$(command -v phpenv)" ] && [-f ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ]; then
+    if [ "$(command -v phpenv)" ] && [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ]; then
 	    echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 	    echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 	fi
