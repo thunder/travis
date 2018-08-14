@@ -30,12 +30,12 @@ install_requirements() {
 
   	# Increase the MySQL connection timeout on the PHP end.
     if [ "$(command -v phpenv)" ] && [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini ]; then
-	    echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-	    echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-	fi
+        echo "mysql.connect_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+        echo "default_socket_timeout=3000" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    fi
 
-	mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL wait_timeout = 36000;"
-	mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL max_allowed_packet = 33554432;"
+    mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL wait_timeout = 36000;"
+    mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "SET GLOBAL max_allowed_packet = 33554432;"
 }
 
 test_coding_style() {
@@ -58,8 +58,8 @@ test_coding_style() {
 }
 
 require_local_project() {
-	composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-	composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require ${THUNDER_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
@@ -81,7 +81,7 @@ create_thunder_project() {
 move_assets() {
     local libraries=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/libraries;
     mkdir ${libraries}
-    ls
+
     if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
         mv ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
     fi
