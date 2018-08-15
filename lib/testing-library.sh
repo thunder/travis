@@ -7,6 +7,17 @@ stage_exists() {
     return ${?}
 }
 
+stage_dependency() {
+    declare -A deps=(
+        [run_tests]="start_services"
+        [start_services]="install_project"
+        [install_project]="build_project"
+        [build_project]="test_coding_style"
+        [test_coding_style]="prepare_environment"
+    )
+    echo ${deps[${1}]}
+}
+
 get_distribution_docroot() {
     case ${THUNDER_TRAVIS_DISTRIBUTION} in
         "thunder")
@@ -21,7 +32,7 @@ get_distribution_docroot() {
 
 get_composer_bin_dir() {
     if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
-        build_project
+        exit 1
     fi
 
     local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
@@ -96,13 +107,20 @@ run_stage() {
         return
     fi
 
+    local dependency=$(stage_dependency ${stage})
+
+
+    if [ ! -z ${dependency} ]; then
+        run_stage ${dependency}
+    fi
+
     # Call the stage function
     _stage_${stage}
 
     finish_stage ${stage}
 }
 
-### Stages do not run these directly, use run_stage() to invoke ###
+### The stages. Do not run these directly, use run_stage() to invoke. ###
 
 _stage_prepare_environment() {
     printf "Preparing environment\n\n"
@@ -113,10 +131,6 @@ _stage_prepare_environment() {
 }
 
 _stage_test_coding_style() {
-    if ! stage_is_finished "prepare_environment"; then
-        run_stage "prepare_environment"
-    fi
-
     printf "Testing coding style\n\n"
 
     local check_parameters=""
@@ -144,10 +158,6 @@ _stage_test_coding_style() {
 }
 
 _stage_build_project() {
-    if ! stage_is_finished "test_coding_style"; then
-        run_stage "test_coding_style"
-    fi
-
     printf "Building project\n\n"
 
     case ${THUNDER_TRAVIS_DISTRIBUTION} in
@@ -167,10 +177,6 @@ _stage_build_project() {
 }
 
 _stage_install_project() {
-    if ! stage_is_finished "build_project"; then
-        run_stage "build_project"
-    fi
-
     printf "Installing project\n\n"
 
     local composer_bin_dir=$(get_composer_bin_dir)
@@ -194,10 +200,6 @@ _stage_install_project() {
 }
 
 _stage_start_services() {
-    if ! stage_is_finished "install_project"; then
-        run_stage "install_project"
-    fi
-
     printf "Starting services\n\n"
 
     local drupal="core/scripts/drupal"
@@ -211,10 +213,6 @@ _stage_start_services() {
 }
 
 _stage_run_tests() {
-    if ! stage_is_finished "start_services"; then
-        run_stage "start_services"
-    fi
-
     printf "Running tests\n\n"
 
     local test_selection
