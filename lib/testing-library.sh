@@ -226,8 +226,6 @@ _stage_run_tests() {
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    cd ${docroot}
-
     case ${THUNDER_TRAVIS_TEST_RUNNER} in
         "phpunit")
             php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${THUNDER_TRAVIS_PROJECT_NAME} || exit 1
@@ -237,5 +235,4 @@ _stage_run_tests() {
         ;;
     esac
 
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
