@@ -240,6 +240,4 @@ _stage_run_tests() {
     esac
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
-
-    clean_up
 }

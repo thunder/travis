@@ -88,3 +88,7 @@ if ! stage_exists ${THUNDER_TRAVIS_TEST_STAGE}; then
 fi
 
 run_stage ${THUNDER_TRAVIS_TEST_STAGE}
+
+if stage_is_finished "run_tests"; then
+    clean_up
+fi
