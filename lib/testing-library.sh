@@ -79,6 +79,7 @@ clean_up() {
     fi
 
     docker rm -f -v selenium-for-tests
+    docker rm -f -v database-for-tests
 
     chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
     rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
