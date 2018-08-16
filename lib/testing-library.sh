@@ -40,7 +40,6 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
-
 require_local_project() {
     composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -127,6 +126,9 @@ _stage_prepare_environment() {
 
     if [ -x "$(command -v phpenv)" ]; then
         phpenv config-rm xdebug.ini
+        echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
+        phpenv config-add drupal.php.ini
+        phpenv rehash
     fi
 }
 
