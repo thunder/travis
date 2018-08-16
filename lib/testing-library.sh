@@ -80,9 +80,8 @@ clean_up() {
 
     docker rm -f selenium-for-tests
 
-    chmod u+w -R ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    rm -rf ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    rm -rf ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+    chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
+    rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
 stage_is_finished() {
