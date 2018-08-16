@@ -94,7 +94,7 @@ finish_stage() {
     local stage="${1}"
 
     if [ ! -d ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
-        mkdir ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+        mkdir -p ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
     fi
 
     touch ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
@@ -168,6 +168,10 @@ _stage_build_project() {
             create_thunder_project
         ;;
     esac
+
+    if [ -z ${THUNDER_TRAVIS_PHP_VERSION} ]; then
+        composer config platform.php ${THUNDER_TRAVIS_PHP_VERSION}
+    fi
 
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
