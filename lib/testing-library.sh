@@ -170,7 +170,7 @@ _stage_build_project() {
     esac
 
     if [ -z ${THUNDER_TRAVIS_PHP_VERSION} ]; then
-        composer config platform.php ${THUNDER_TRAVIS_PHP_VERSION}
+        composer config platform.php ${THUNDER_TRAVIS_PHP_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     fi
 
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
