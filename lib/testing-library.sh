@@ -48,8 +48,7 @@ require_local_project() {
 }
 
 composer_install() {
-    export COMPOSER_MEMORY_LIMIT=-1
-    php `which composer` install --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 create_drupal_project() {
@@ -170,7 +169,13 @@ _stage_build_project() {
         ;;
     esac
 
+    if [ -z ${THUNDER_TRAVIS_PHP_VERSION} ]; then
+        composer config platform.php ${THUNDER_TRAVIS_PHP_VERSION}
+    fi
+
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+
+    cat ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json
 
     require_local_project
     composer_install
