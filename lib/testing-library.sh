@@ -126,6 +126,7 @@ _stage_prepare_environment() {
 
     if [ -x "$(command -v phpenv)" ]; then
         phpenv config-rm xdebug.ini
+        # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
         echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
         phpenv config-add drupal.php.ini
         phpenv rehash
