@@ -189,7 +189,6 @@ _stage_start_services() {
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
-
 }
 
 _stage_install_project() {
