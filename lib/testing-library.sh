@@ -79,7 +79,6 @@ clean_up() {
     fi
 
     docker rm -f -v selenium-for-tests
-    docker rm -f -v database-for-tests
 
     chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
     rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
@@ -188,9 +187,6 @@ _stage_start_services() {
 
     ${drush} runserver "http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
-
-    docker run --detach --publish ${THUNDER_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${THUNDER_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${THUNDER_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${THUNDER_TRAVIS_DATABASE_NAME}" --env "MYSQL_ROOT_PASSWORD=${THUNDER_TRAVIS_DATABASE_ROOT_PASSWORD}" ${THUNDER_TRAVIS_DATABASE_CONTAINER}:${THUNDER_TRAVIS_DATABASE_VERSION}
-    nc -z -w 20 ${THUNDER_TRAVIS_DATABASE_HOST} ${THUNDER_TRAVIS_DATABASE_PORT}
 
     docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 
