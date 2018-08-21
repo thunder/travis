@@ -30,6 +30,9 @@ before_install:
   - composer require drupal/select2:dev-feature/new-travis-integration
   - composer require drupal/paragraphs_features:dev-8.x-1.x
 
+install:
+  - composer install
+
 script:
   - test-drupal-module
 
