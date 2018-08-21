@@ -20,7 +20,7 @@ env:
     - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
     - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
   global:
-    - PATH="${TRAVIS_BUILD_DIR}/bin:$HOME/.composer/vendor/bin:$PATH"
+    - PATH="${TRAVIS_BUILD_DIR}/bin:${TRAVIS_BUILD_DIR}/vendor/bin:$PATH"
 
 before_install:
   - composer config repositories.drupal composer https://packages.drupal.org/8
@@ -29,8 +29,9 @@ before_install:
   - composer config repositories.paragraph_features git https://github.com/thunder/paragraphs_features.git
   - composer require drupal/select2:dev-feature/new-travis-integration
   - composer require drupal/paragraphs_features:dev-8.x-1.x
-  - composer global require burdamagazinorg/thunder-dev-tools
-  - composer global require dealerdirect/phpcodesniffer-composer-installer
+
+install:
+  - composer install
 
 script:
   - cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
