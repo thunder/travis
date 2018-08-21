@@ -20,7 +20,7 @@ env:
     - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
     - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
   global:
-  - PATH="${TRAVIS_BUILD_DIR}/bin:$PATH"
+    - PATH="${TRAVIS_BUILD_DIR}/bin:$PATH"
 
 before_install:
   - composer require drupal/select2:dev-feature/new-travis-integration
