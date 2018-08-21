@@ -76,6 +76,8 @@ source $(get_script_dir)/../lib/testing-library.sh
 
 ### Run stage ###
 
+cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
+
 if ! stage_exists ${THUNDER_TRAVIS_TEST_STAGE}; then
     printf "Unknown stage '${1}'\n\n"
     show_help

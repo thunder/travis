@@ -34,7 +34,6 @@ install:
   - composer install
 
 script:
-  - cd $THUNDER_TRAVIS_PROJECT_BASEDIR
   - test-drupal-module
 
 notifications:
