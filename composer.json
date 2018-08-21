@@ -15,7 +15,6 @@
     ],
     "require": {
         "burdamagazinorg/thunder-dev-tools": "~1.0.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
-        "symfony/yaml": "^3.4"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
     }
 }
