@@ -18,14 +18,14 @@ stage_dependency() {
     echo ${deps[${1}]}
 }
 
+# This has currently no real meaning, but will be necessary, once we test with thunder_project.
+# thunder_project builds int docroot instead of web.
 get_distribution_docroot() {
-    case ${THUNDER_TRAVIS_DISTRIBUTION} in
-        "thunder")
-            docroot="docroot"
-        ;;
-        *)
-            docroot="web"
-    esac
+    local docroot="web"
+
+    if [ ${THUNDER_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+        docroot="docroot"
+    fi
 
     echo ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
 }
@@ -54,11 +54,6 @@ create_drupal_project() {
     composer create-project drupal-composer/drupal-project:8.x-dev ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
     composer config repositories.assets composer https://asset-packagist.org --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require drupal/core:${THUNDER_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-}
-
-create_thunder_project() {
-    composer create-project burdamagazinorg/thunder-project ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
-    composer require burdamagazinorg/thunder:${THUNDER_TRAVIS_THUNDER_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 move_assets() {
@@ -162,14 +157,7 @@ _stage_test_coding_style() {
 _stage_build_project() {
     printf "Building project\n\n"
 
-    case ${THUNDER_TRAVIS_DISTRIBUTION} in
-        "drupal")
-            create_drupal_project
-        ;;
-        "thunder")
-            create_thunder_project
-        ;;
-    esac
+    create_drupal_project
 
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
@@ -183,18 +171,8 @@ _stage_install_project() {
 
     local composer_bin_dir=$(get_composer_bin_dir)
     local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
-    local profile=""
+    local profile="minimal"
     local additional_drush_parameter=""
-
-    case ${THUNDER_TRAVIS_DISTRIBUTION} in
-        "drupal")
-            profile="minimal"
-        ;;
-        "thunder")
-            profile="thunder"
-            additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo=NULL"
-        ;;
-    esac
 
     PHP_OPTIONS="-d sendmail_path=$(which true)"
     ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
