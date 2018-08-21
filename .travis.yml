@@ -31,8 +31,10 @@ before_install:
   - composer require drupal/paragraphs_features:dev-8.x-1.x
   - composer global require burdamagazinorg/thunder-dev-tools
   - composer global require dealerdirect/phpcodesniffer-composer-installer
+  - composer global require symfony/yaml
 
 script:
+  - cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
   - test-drupal-module
 
 notifications:

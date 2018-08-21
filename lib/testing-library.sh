@@ -144,11 +144,8 @@ _stage_test_coding_style() {
         check_parameters="${check_parameters} --javascript"
     fi
 
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
-    ls
     bash check-guidelines.sh --init
     bash check-guidelines.sh -v ${check_parameters}
-    cd -
 
     # Propagate possible errors
     local exit_code=${?}
