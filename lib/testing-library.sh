@@ -19,7 +19,7 @@ stage_dependency() {
 }
 
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.
-# thunder_project builds int docroot instead of web.
+# thunder_project builds into docroot instead of web.
 get_distribution_docroot() {
     local docroot="web"
 
