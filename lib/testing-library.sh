@@ -145,6 +145,7 @@ _stage_test_coding_style() {
     fi
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
+    ls
     bash check-guidelines.sh --init
     bash check-guidelines.sh -v ${check_parameters}
     cd -
