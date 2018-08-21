@@ -23,7 +23,8 @@ env:
     - PATH="${TRAVIS_BUILD_DIR}/bin:$PATH"
 
 before_install:
-  - composer config repositories.0 composer https://packages.drupal.org/8
+  - composer config repositories.select2 git https://github.com/thunder/select2.git
+  - composer config repositories.paragraph_features git https://github.com/thunder/paragraphs_features.git
   - composer require drupal/select2:dev-feature/new-travis-integration
   - composer require drupal/paragraphs_features:dev-8.x-1.x
 
