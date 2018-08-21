@@ -9,9 +9,9 @@ stage_exists() {
 
 stage_dependency() {
     declare -A deps=(
-        [run_tests]="install_project"
-        [install_project]="start_services"
-        [start_services]="build_project"
+        [run_tests]="start_services"
+        [start_services]="install_project"
+        [install_project]="build_project"
         [build_project]="test_coding_style"
         [test_coding_style]="prepare_environment"
     )
