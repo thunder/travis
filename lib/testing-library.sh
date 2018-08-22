@@ -219,6 +219,10 @@ _stage_test_coding_style() {
 _stage_build_project() {
     printf "Building project\n\n"
 
+    if [ ${TRAVIS} ]; then
+        composer global require hirak/prestissimo
+    fi
+
     create_drupal_project
 
     composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
