@@ -120,8 +120,10 @@ clean_up() {
 
     docker rm -f -v selenium-for-tests
 
-    chmod u+w -R ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
-    rm -rf ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+    chmod u+w -R ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
 stage_is_finished() {
@@ -190,7 +192,9 @@ _stage_prepare_environment() {
 }
 
 _stage_test_coding_style() {
-    printf "Testing coding style\n\n"
+    if ! ${DRUPAL_TRAVIS_TEST_CODING_STYLES}; then
+        return
+    fi
 
     local check_parameters=""
 
@@ -198,11 +202,11 @@ _stage_test_coding_style() {
         npm install -g eslint
     fi
 
-    if [ ${DRUPAL_TRAVIS_TEST_PHP} == 1 ]; then
+    if ${DRUPAL_TRAVIS_TEST_PHP}; then
         check_parameters="${check_parameters} --phpcs"
     fi
 
-    if [ ${DRUPAL_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
+    if ${DRUPAL_TRAVIS_TEST_JAVASCRIPT}; then
         check_parameters="${check_parameters} --javascript"
     fi
 
@@ -254,9 +258,9 @@ _stage_start_web_server() {
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
 
-    if  ! port_is_open ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
-        ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &
-        wait_for_port ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
+    if  ! port_is_open ${DRUPAL_TRAVIS_HTTP_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
+        ${drush} runserver "http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &
+        wait_for_port ${DRUPAL_TRAVIS_HTTP_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
     fi
 }
 
@@ -279,7 +283,7 @@ _stage_run_tests() {
             php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
         ;;
         "run-tests")
-            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${DRUPAL_TRAVIS_TEST_GROUP} || exit 1
+            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${DRUPAL_TRAVIS_TEST_GROUP} || exit 1
         ;;
     esac
 
