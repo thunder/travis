@@ -9,9 +9,9 @@ stage_exists() {
 
 stage_dependency() {
     declare -A deps=(
-        [run_tests]="install_project"
-        [install_project]="start_services"
-        [start_services]="build_project"
+        [run_tests]="start_services"
+        [start_services]="install_project"
+        [install_project]="build_project"
         [build_project]="test_coding_style"
         [test_coding_style]="prepare_environment"
     )
@@ -23,74 +23,74 @@ stage_dependency() {
 get_distribution_docroot() {
     local docroot="web"
 
-    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+    if [ ${THUNDER_TRAVIS_DISTRIBUTION} = "thunder" ]; then
         docroot="docroot"
     fi
 
-    echo ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
+    echo ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
 }
 
 get_composer_bin_dir() {
-    if [ ! -f ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
         exit 1
     fi
 
-    local composer_bin_dir=${DRUPAL_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
+    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
 
     echo ${composer_bin_dir}
 }
 
 require_local_project() {
-    composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer require ${DRUPAL_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require ${THUNDER_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 composer_install() {
-    COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 create_drupal_project() {
-    composer create-project drupal-composer/drupal-project:8.x-dev ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
-    composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer require drupal/core:${DRUPAL_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer create-project drupal-composer/drupal-project:8.x-dev ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
+    composer config repositories.assets composer https://asset-packagist.org --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require drupal/core:${THUNDER_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 move_assets() {
     local libraries=$(get_distribution_docroot)/libraries;
     mkdir ${libraries}
 
-    if [ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
-        mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
+    if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
+        mv ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
     fi
-    if [ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]; then
-        mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
+    if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]; then
+        mv ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
     fi
 }
 
 clean_up() {
-    if [ ${DRUPAL_TRAVIS_NO_CLEANUP} ]; then
+    if [ ${THUNDER_TRAVIS_NO_CLEANUP} ]; then
         return
     fi
 
     docker rm -f -v selenium-for-tests
 
-    chmod u+w -R ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
-    rm -rf ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+    chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
+    rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
 stage_is_finished() {
-    [ -f "${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]
+    [ -f "${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]
 }
 
 finish_stage() {
     local stage="${1}"
 
-    if [ ! -d ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
-        mkdir -p ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    if [ ! -d ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
+        mkdir -p ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
     fi
 
-    touch ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
+    touch ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
 }
 
 run_stage() {
@@ -136,11 +136,11 @@ _stage_test_coding_style() {
         npm install -g eslint
     fi
 
-    if [ ${DRUPAL_TRAVIS_TEST_PHP} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
         check_parameters="${check_parameters} --phpcs"
     fi
 
-    if [ ${DRUPAL_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
         check_parameters="${check_parameters} --javascript"
     fi
 
@@ -159,11 +159,24 @@ _stage_build_project() {
 
     create_drupal_project
 
-    composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     require_local_project
     composer_install
     move_assets
+}
+
+_stage_install_project() {
+    printf "Installing project\n\n"
+
+    local composer_bin_dir=$(get_composer_bin_dir)
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
+    local profile="minimal"
+    local additional_drush_parameter=""
+
+    PHP_OPTIONS="-d sendmail_path=$(which true)"
+    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
+    ${drush} pm-enable simpletest
 }
 
 _stage_start_services() {
@@ -181,39 +194,26 @@ _stage_start_services() {
     docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
 }
 
-_stage_install_project() {
-    printf "Installing project\n\n"
-
-    local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
-    local profile="minimal"
-    local additional_drush_parameter=""
-
-    PHP_OPTIONS="-d sendmail_path=$(which true)"
-    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
-    ${drush} pm-enable simpletest
-}
-
 _stage_run_tests() {
     printf "Running tests\n\n"
 
     local test_selection
     local docroot=$(get_distribution_docroot)
     local composer_bin_dir=$(get_composer_bin_dir)
-    local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
+    local phpunit=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local runtests=${docroot}/core/scripts/run-tests.sh
     local settings_file=${docroot}/sites/default/settings.php
 
-    if [ ${DRUPAL_TRAVIS_TEST_GROUP} ]; then
-       test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
+    if [ ${THUNDER_TRAVIS_TEST_GROUP} ]; then
+       test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    case ${DRUPAL_TRAVIS_TEST_RUNNER} in
+    case ${THUNDER_TRAVIS_TEST_RUNNER} in
         "phpunit")
-            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
+            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${THUNDER_TRAVIS_PROJECT_NAME} || exit 1
         ;;
         "run-tests")
-            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${DRUPAL_TRAVIS_TEST_GROUP} || exit 1
+            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
         ;;
     esac
 
