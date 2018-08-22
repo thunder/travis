@@ -187,8 +187,7 @@ _stage_start_services() {
     local docroot=$(get_distribution_docroot)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
-    php -S ${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} -t ${docroot} ${docroot}/.ht.router.php >/dev/null 2>&1 &
-    #${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
+    ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
     nc -z -w 20 ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
 
     docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
