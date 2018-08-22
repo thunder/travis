@@ -18,6 +18,31 @@ stage_dependency() {
     echo ${deps[${1}]}
 }
 
+function port_is_open() {
+	local host=${1}
+	local port=${2}
+
+    $(nc -w 1 "${host}" ${port})
+}
+
+function wait_for_port() {
+	local host=${1}
+	local port=${2}
+	local max_count=${3:-10}
+
+	local count=1
+
+	until port_is_open ${host} ${port}; do
+		sleep 1
+		if [ ${count} -gt ${max_count} ]
+		then
+			echo "Error: Timeout while waiting for port ${port} on host ${host}." 1>&2
+			exit 1
+		fi
+		count=$[count+1]
+	done
+}
+
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.
 # thunder_project builds into docroot instead of web.
 get_distribution_docroot() {
@@ -102,7 +127,6 @@ run_stage() {
 
     local dependency=$(stage_dependency ${stage})
 
-
     if [ ! -z ${dependency} ]; then
         run_stage ${dependency}
     fi
@@ -117,6 +141,12 @@ run_stage() {
 
 _stage_prepare_environment() {
     printf "Preparing environment\n\n"
+
+    if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
+        printf "Starting selenium\n"
+        docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
+    fi
 
     if [ -x "$(command -v phpenv)" ]; then
         phpenv config-rm xdebug.ini
@@ -187,10 +217,12 @@ _stage_start_services() {
     local docroot=$(get_distribution_docroot)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
-    ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
-    nc -z -w 20 ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
 
-    docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+    if  ! port_is_open ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
+        printf "Starting webserver\n"
+        ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
+        wait_for_port ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
+    fi
 }
 
 _stage_run_tests() {
