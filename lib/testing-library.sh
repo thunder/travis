@@ -122,6 +122,8 @@ clean_up() {
 
     chmod u+w -R ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+
+    kill 0
 }
 
 stage_is_finished() {
