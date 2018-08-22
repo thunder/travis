@@ -9,8 +9,8 @@ stage_exists() {
 
 stage_dependency() {
     declare -A deps=(
-        [run_tests]="start_services"
-        [start_services]="install_project"
+        [run_tests]="start_web_server"
+        [start_web_server]="install_project"
         [install_project]="build_project"
         [build_project]="test_coding_style"
         [test_coding_style]="prepare_environment"
@@ -22,7 +22,7 @@ function port_is_open() {
 	local host=${1}
 	local port=${2}
 
-    $(nc -w 1 "${host}" ${port})
+    $(nc -z "${host}" "${port}")
 }
 
 function wait_for_port() {
@@ -36,11 +36,31 @@ function wait_for_port() {
 		sleep 1
 		if [ ${count} -gt ${max_count} ]
 		then
-			echo "Error: Timeout while waiting for port ${port} on host ${host}." 1>&2
+			printf "Error: Timeout while waiting for port ${port} on host ${host}.\n" 1>&2
 			exit 1
 		fi
 		count=$[count+1]
 	done
+}
+
+# Test docker container health status
+function get_container_health {
+    docker inspect --format "{{json .State.Health.Status }}" $1
+}
+
+# Wait till docker container is fully started
+function wait_for_container {
+    local container=${1}
+    printf "Waiting for container ${container}."
+    while local status=$(get_container_health ${container}); [ ${status} != "\"healthy\"" ]; do
+        if [ ${status} == "\"unhealthy\"" ]; then
+            printf "Container ${container} failed to start. \n"
+            exit 1
+        fi
+        printf "."
+        sleep 1
+    done
+    printf " Container started!\n"
 }
 
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.
@@ -148,7 +168,19 @@ _stage_prepare_environment() {
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
 
+    if  ! port_is_open ${DRUPAL_TRAVIS_DATABASE_HOST} ${DRUPAL_TRAVIS_DATABASE_PORT} ; then
+        printf "Starting database\n"
+        if [ ${DRUPAL_TRAVIS_DATABASE_PASSWORD} ]; then
+            docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+            wait_for_container database-for-tests
+        else
+            printf "No database password given. The docker container can only be started, when the environment variable DRUPAL_TRAVIS_DATABASE_PASSWORD is set to an non empty value\n"
+            exit 1
+        fi
+    fi
+
     if [ -x "$(command -v phpenv)" ]; then
+        printf "Configure php\n"
         phpenv config-rm xdebug.ini
         # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
         echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
@@ -209,8 +241,8 @@ _stage_install_project() {
     ${drush} pm-enable simpletest
 }
 
-_stage_start_services() {
-    printf "Starting services\n\n"
+_stage_start_web_server() {
+    printf "Starting web server\n\n"
 
     local drupal="core/scripts/drupal"
     local composer_bin_dir=$(get_composer_bin_dir)
@@ -219,7 +251,6 @@ _stage_start_services() {
 
 
     if  ! port_is_open ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
-        printf "Starting webserver\n"
         ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &
         wait_for_port ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
     fi
