@@ -171,9 +171,11 @@ _stage_start_services() {
 
     local drupal="core/scripts/drupal"
     local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
+    local docroot=$(get_distribution_docroot)
+    local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
-    ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
+    php -S ${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} -t ${docroot} ${docroot}/.ht.router.php &
+    #${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
     nc -z -w 20 ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
 
     docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
