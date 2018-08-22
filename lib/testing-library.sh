@@ -220,7 +220,7 @@ _stage_start_services() {
 
     if  ! port_is_open ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
         printf "Starting webserver\n"
-        ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" --db-url=${SIMPLETEST_DB} &
+        ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &
         wait_for_port ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
     fi
 }
