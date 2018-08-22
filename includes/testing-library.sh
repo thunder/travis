@@ -10,10 +10,10 @@ stage_exists() {
 stage_dependency() {
     declare -A deps=(
         [run_tests]="start_web_server"
-        [start_web_server]="install_project"
-        [install_project]="build_project"
-        [build_project]="test_coding_style"
-        [test_coding_style]="prepare_environment"
+        [start_web_server]="install"
+        [install]="build"
+        [build]="coding_style"
+        [coding_style]="prepare"
     )
     echo ${deps[${1}]}
 }
@@ -161,7 +161,7 @@ run_stage() {
 
 ### The stages. Do not run these directly, use run_stage() to invoke. ###
 
-_stage_prepare_environment() {
+_stage_prepare() {
     printf "Preparing environment\n\n"
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
@@ -191,7 +191,7 @@ _stage_prepare_environment() {
     fi
 }
 
-_stage_test_coding_style() {
+_stage_coding_style() {
     if ! ${DRUPAL_TRAVIS_TEST_CODING_STYLES}; then
         return
     fi
@@ -220,7 +220,7 @@ _stage_test_coding_style() {
     fi
 }
 
-_stage_build_project() {
+_stage_build() {
     printf "Building project\n\n"
 
     if [ ${TRAVIS} ]; then
@@ -236,7 +236,7 @@ _stage_build_project() {
     move_assets
 }
 
-_stage_install_project() {
+_stage_install() {
     printf "Installing project\n\n"
 
     local composer_bin_dir=$(get_composer_bin_dir)
