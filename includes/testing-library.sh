@@ -123,6 +123,7 @@ clean_up() {
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver
     rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
@@ -164,6 +165,8 @@ run_stage() {
 _stage_prepare() {
     printf "Preparing environment\n\n"
 
+    mdir -p ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting chromium\n"
         if [ -x "$(command -v chromium-browser)" ]; then
@@ -174,7 +177,7 @@ _stage_prepare() {
         else
             wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
             unzip chromedriver_linux64.zip -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
-            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
+            ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
             #docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         fi
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
