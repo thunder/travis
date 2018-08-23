@@ -123,7 +123,6 @@ clean_up() {
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
-    rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver
     rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
@@ -165,17 +164,13 @@ run_stage() {
 _stage_prepare() {
     printf "Preparing environment\n\n"
 
-    mkdir -p ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
-
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
-        printf "Starting chromium\n"
+        printf "Starting selenium\n"
+
         if [ "$(uname)" == "Darwin" ]; then
             chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
         else
-            wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
-            unzip chromedriver_linux64.zip -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
-            ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
-            #docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+            docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         fi
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
@@ -288,6 +283,10 @@ _stage_run_tests() {
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
+    # When testing on Macs, we use the chromedriver, which uses a different URL then the selenium hub
+    if [ "$(uname)" == "Darwin" ]; then
+        export MINK_DRIVER_ARGS_WEBDRIVER="[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"
+    fi
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
             php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
