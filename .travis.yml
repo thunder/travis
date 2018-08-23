@@ -11,6 +11,9 @@ cache:
 php:
   - 7.2
 
+addons:
+  chrome: stable
+
 branches:
   only:
     - master
