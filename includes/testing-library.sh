@@ -165,8 +165,10 @@ _stage_prepare() {
     printf "Preparing environment\n\n"
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
-        printf "Starting selenium\n"
-
+        printf "Starting chromium\n"
+        if [ -x "$(command -v chromium-browser)" ]; then
+            export CHROME_BIN=chromium-browser
+        fi
         if [ "$(uname)" == "Darwin" ]; then
             chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
         else
