@@ -81,7 +81,7 @@ DRUPAL_TRAVIS_TEST_RUNNER=${DRUPAL_TRAVIS_TEST_RUNNER:-phpunit}
 
 # By default all created files are deleted after successfull test runs, you can disable this behaviour by setting
 # this to true.
-DRUPAL_TRAVIS_NO_CLEANUP=${DRUPAL_TRAVIS_NO_CLEANUP}
+DRUPAL_TRAVIS_NO_CLEANUP=${DRUPAL_TRAVIS_NO_CLEANUP:-false}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
@@ -94,7 +94,7 @@ export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HO
 export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
 
 # The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL then the selenium hub
-if [ ${TRAVIS} ]; then
+if ${TRAVIS}; then
     export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}"
 else
     export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"}"

@@ -114,7 +114,7 @@ move_assets() {
 }
 
 clean_up() {
-    if [ ${DRUPAL_TRAVIS_NO_CLEANUP} ]; then
+    if ${DRUPAL_TRAVIS_NO_CLEANUP}; then
         return
     fi
 
@@ -167,7 +167,7 @@ _stage_prepare() {
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting web driver\n"
 
-        if [ ${TRAVIS} ]; then
+        if ${TRAVIS}; then
             docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         else
             chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
