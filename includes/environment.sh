@@ -93,5 +93,9 @@ export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HO
 # The database string, that simpletest will use.
 export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
 
-# The driver args for webdriver. By default we provide the args, that work with the selenium/standalone-chrome container.
-export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
+# The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL then the selenium hub
+if [ ${TRAVIS} ]; then
+    export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"}"
+else
+    export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}"
+fi

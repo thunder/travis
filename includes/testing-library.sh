@@ -283,10 +283,6 @@ _stage_run_tests() {
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-    # When testing locally, we use the chromedriver, which uses a different URL then the selenium hub
-    if [ ! ${TRAVIS} ]; then
-        export MINK_DRIVER_ARGS_WEBDRIVER="[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"
-    fi
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
             php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
