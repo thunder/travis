@@ -59,7 +59,7 @@ While the general approach is very similar to drupal_ti, we differ in some regar
  - If you want to run deprecated TesBase classes, use drupal_ti.
  - When using WebDriverTestBase and Drupal > 8.6 (which needs selenium instead of phantom.js) use this package.
  - If you want a simple travis.yml file, that works without any configuration, use this package.
- - If you have a linux installation on your development computer, you can directly use this test runner! All you need is php command line client, composer and docker.
+ - You can directly use this for quickly running the tests locally as well! All you need is php command line client, composer, chromedriver and docker (or mysql running natively).
    If you have all this installed on your local machine, just do <code>composer global require thunder/travis</code> add the global 
    composer directory to your $PATH and call <code>test-drupal-module</code> from within your modules directory. Everything will be build, installed
    and tested automatically.
