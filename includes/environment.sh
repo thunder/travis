@@ -76,7 +76,7 @@ DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 
 # The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
-# If you prefere the output if the drupal run-tests.sh set this to run-tests
+# If you prefer the output of drupal run-tests.sh set this to run-tests
 DRUPAL_TRAVIS_TEST_RUNNER=${DRUPAL_TRAVIS_TEST_RUNNER:-phpunit}
 
 # By default all created files are deleted after successfull test runs, you can disable this behaviour by setting
@@ -84,6 +84,7 @@ DRUPAL_TRAVIS_TEST_RUNNER=${DRUPAL_TRAVIS_TEST_RUNNER:-phpunit}
 DRUPAL_TRAVIS_NO_CLEANUP=${DRUPAL_TRAVIS_NO_CLEANUP}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
+# The default value is "week" to ignore any deprecation notices.
 export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 
 # The url that simpletest will use.
@@ -92,5 +93,5 @@ export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HO
 # The database string, that simpletest will use.
 export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
 
-# The driver args for webdriver. by default we provide the args, that work with the selenium/standalone-chrome container.
+# The driver args for webdriver. By default we provide the args, that work with the selenium/standalone-chrome container.
 export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
