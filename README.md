@@ -237,7 +237,7 @@ The driver args for webdriver. By default we provide the args, that work with th
 If you want to use the chromedriver, when testing outsideof travis,  directly without selenium, you could try to change
 that variable to:
 
-    export MINK_DRIVER_ARGS_WEBDRIVER="["chrome", null, "http://127.0.0.1:<your selenium port>"]
+    export MINK_DRIVER_ARGS_WEBDRIVER="[\"chrome\", null, \"http://127.0.0.1:<your selenium port>\"]"
 
 Example .travis.yml with some variables set:
 
