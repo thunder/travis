@@ -233,11 +233,8 @@ The default value is "week" to ignore any deprecation notices.
 
 - MINK_DRIVER_ARGS_WEBDRIVER
 
-The driver args for webdriver. By default we provide the args, that work with the selenium/standalone-chrome container.
-If you want to use the chromedriver, when testing outsideof travis,  directly without selenium, you could try to change
-that variable to:
-
-    export MINK_DRIVER_ARGS_WEBDRIVER="[\"chrome\", null, \"http://127.0.0.1:<your selenium port>\"]"
+The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL than 
+the selenium hub, that is used for travis runs, that is why we provide different defaults for travis / local tests.
 
 Example .travis.yml with some variables set:
 
