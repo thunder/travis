@@ -165,7 +165,7 @@ run_stage() {
 _stage_prepare() {
     printf "Preparing environment\n\n"
 
-    mdir -p ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+    mkdir -p ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting chromium\n"
