@@ -165,12 +165,12 @@ _stage_prepare() {
     printf "Preparing environment\n\n"
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
-        printf "Starting selenium\n"
+        printf "Starting web driver\n"
 
-        if [ "$(uname)" == "Darwin" ]; then
-            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
-        else
+        if [ ${TRAVIS} ]; then
             docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        else
+            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
         fi
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
@@ -283,8 +283,8 @@ _stage_run_tests() {
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-    # When testing on Macs, we use the chromedriver, which uses a different URL then the selenium hub
-    if [ "$(uname)" == "Darwin" ]; then
+    # When testing locally, we use the chromedriver, which uses a different URL then the selenium hub
+    if [ ! ${TRAVIS} ]; then
         export MINK_DRIVER_ARGS_WEBDRIVER="[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"
     fi
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
