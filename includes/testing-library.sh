@@ -227,7 +227,7 @@ _stage_coding_style() {
 
 _stage_prepare_build() {
     printf "Prepare composer.json\n\n"
-    if [ ${TRAVIS} ]; then
+    if ${TRAVIS}; then
         composer global require hirak/prestissimo
     fi
 
