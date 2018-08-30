@@ -149,16 +149,31 @@ move_assets() {
     fi
 }
 
+download_chromedriver() {
+    local filename="chromedriver_linux64.zip"
+
+    if [[ ${OSTYPE} == "darwin"* ]]; then
+        filename="chromedriver_mac64.zip"
+    fi
+
+    wget -q -O ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${filename} https://chromedriver.storage.googleapis.com/${DRUPAL_TRAVIS_CHROMEDRIVER_VERSION}/${filename}
+    unzip ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${filename} -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+    rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${filename}
+}
+
 clean_up() {
     if ${DRUPAL_TRAVIS_NO_CLEANUP}; then
         return
     fi
 
-    docker rm -f -v selenium-for-tests
+    if ${DRUPAL_TRAVIS_USE_SELENIUM}; then
+        docker rm -f -v selenium-for-tests
+    fi
 
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/*
     rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
@@ -200,12 +215,15 @@ run_stage() {
 _stage_setup() {
     printf "Setup environment\n\n"
 
+    mkdir -p ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
+
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting web driver\n"
-        if ${TRAVIS} = true; then
-            docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        if ${DRUPAL_TRAVIS_USE_SELENIUM}; then
+            docker start selenium-for-tests 2>/dev/null || docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         else
-            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
+            download_chromedriver
+            ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
         fi
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
@@ -213,7 +231,7 @@ _stage_setup() {
     if  ! port_is_open ${DRUPAL_TRAVIS_DATABASE_HOST} ${DRUPAL_TRAVIS_DATABASE_PORT} ; then
         printf "Starting database\n"
         if [ ${DRUPAL_TRAVIS_DATABASE_PASSWORD} ]; then
-            docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+            docker start database-for-tests 2>/dev/null || docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
             wait_for_container database-for-tests
         else
             printf "No database password given. The docker container can only be started, when the environment variable DRUPAL_TRAVIS_DATABASE_PASSWORD is set to an non empty value\n"
@@ -297,7 +315,6 @@ _stage_start_web_server() {
     local composer_bin_dir=$(get_composer_bin_directory)
     local docroot=$(get_distribution_docroot)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
-
 
     if  ! port_is_open ${DRUPAL_TRAVIS_HTTP_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
         ${drush} runserver "http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &

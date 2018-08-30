@@ -54,7 +54,15 @@ DRUPAL_TRAVIS_HTTP_HOST=${DRUPAL_TRAVIS_HTTP_HOST:-127.0.0.1}
 # The web server port. Defaults to 8888
 DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 
-# The selenium chrome docker version to use. defaults to the latest version.
+# Use selenium to spawn chromedriver. On travis we want to do that, to be able to use the selenium docker.
+# On local development calling chromedriver directly is more straight forward.
+DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
+
+# The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
+# When selenium is used, specify DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION instead.
+DRUPAL_TRAVIS_CHROMEDRIVER_VERSION=${DRUPAL_TRAVIS_CHROMEDRIVER_VERSION:-$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE)}
+
+# The selenium chrome docker version to use. Defaults to the latest version.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-latest}
 
 # The selenium host. Defaults to the web server host.
@@ -96,9 +104,8 @@ export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HO
 # The database string, that simpletest will use.
 export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
 
-# The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL than
-# the selenium hub, that is used for travis runs.
-if ${TRAVIS}; then
+# The driver args for webdriver. Depending on whether we use selenium or chromedriver directly, we need different defaults.
+if ${DRUPAL_TRAVIS_USE_SELENIUM}; then
     export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
 else
     export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"}
