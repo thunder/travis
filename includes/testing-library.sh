@@ -89,7 +89,7 @@ get_distribution_docroot() {
     echo ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
 }
 
-get_composer_bin_dir() {
+get_composer_bin_directory() {
     if [ ! -f ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
         exit 1
     fi
@@ -155,8 +155,6 @@ clean_up() {
     fi
 
     docker rm -f -v selenium-for-tests
-    # Remove any subprocesses. For example the drush webserver process
-    pkill -P $$
 
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -282,7 +280,7 @@ _stage_build() {
 _stage_install() {
     printf "Installing project\n\n"
 
-    local composer_bin_dir=$(get_composer_bin_dir)
+    local composer_bin_dir=$(get_composer_bin_directory)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
     local profile="minimal"
     local additional_drush_parameter=""
@@ -296,7 +294,7 @@ _stage_start_web_server() {
     printf "Starting web server\n\n"
 
     local drupal="core/scripts/drupal"
-    local composer_bin_dir=$(get_composer_bin_dir)
+    local composer_bin_dir=$(get_composer_bin_directory)
     local docroot=$(get_distribution_docroot)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
@@ -312,7 +310,7 @@ _stage_run_tests() {
 
     local test_selection
     local docroot=$(get_distribution_docroot)
-    local composer_bin_dir=$(get_composer_bin_dir)
+    local composer_bin_dir=$(get_composer_bin_directory)
     local project_type_directory=$(get_project_type_directory)
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local runtests=${docroot}/core/scripts/run-tests.sh
