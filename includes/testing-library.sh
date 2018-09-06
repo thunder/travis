@@ -156,7 +156,7 @@ clean_up() {
 
     docker rm -f -v selenium-for-tests
     # Remove any subprocesses. For example the drush webserver process
-    [[ -z "$(jobs -p)" ]] || kill $(jobs -p)
+    pkill -P $$
 
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
