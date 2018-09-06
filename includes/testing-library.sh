@@ -99,6 +99,28 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
+get_project_type_directory() {
+    if [ ! -f ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json ]; then
+        local project_type="drupal-module"
+    else
+        local project_type=$(jq -er '.type // "drupal-module"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)
+    fi
+
+    case ${project_type} in
+        drupal-module)
+            local project_type_directory="modules"
+            ;;
+        drupal-profile)
+            local project_type_directory="profiles"
+            ;;
+        drupal-theme)
+            local project_type_directory="themes"
+            ;;
+    esac
+
+    echo "${project_type_directory}"
+}
+
 require_local_project() {
     composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -133,6 +155,8 @@ clean_up() {
     fi
 
     docker rm -f -v selenium-for-tests
+    # Remove any subprocesses. For example the drush webserver process
+    [[ -z "$(jobs -p)" ]] || kill $(jobs -p)
 
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -289,20 +313,27 @@ _stage_run_tests() {
     local test_selection
     local docroot=$(get_distribution_docroot)
     local composer_bin_dir=$(get_composer_bin_dir)
+    local project_type_directory=$(get_project_type_directory)
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local runtests=${docroot}/core/scripts/run-tests.sh
     local settings_file=${docroot}/sites/default/settings.php
-
-    if [ ${DRUPAL_TRAVIS_TEST_GROUP} ]; then
-       test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
-    fi
+    local project_test_directory=${docroot}/${project_type_directory}/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}
 
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
-            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/profiles/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
+            if [ ${DRUPAL_TRAVIS_TEST_GROUP} ]; then
+               test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
+            fi
+            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_test_directory} || exit 1
         ;;
         "run-tests")
-            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${DRUPAL_TRAVIS_TEST_GROUP} || exit 1
+            if [ ${DRUPAL_TRAVIS_TEST_GROUP} ]; then
+               test_selection="${DRUPAL_TRAVIS_TEST_GROUP}"
+            else
+               test_selection="--directory ${project_test_directory}"
+            fi
+
+            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${test_selection} || exit 1
         ;;
     esac
 
