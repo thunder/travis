@@ -8,15 +8,28 @@ stage_exists() {
 }
 
 stage_dependency() {
-    declare -A deps=(
-        [run_tests]="start_web_server"
-        [start_web_server]="install"
-        [install]="build"
-        [build]="prepare_build"
-        [prepare_build]="coding_style"
-        [coding_style]="setup"
-    )
-    echo ${deps[${1}]}
+    case ${1} in
+        run_tests)
+            local dep="start_web_server"
+            ;;
+        start_web_server)
+            local dep="install"
+            ;;
+        install)
+            local dep="build"
+            ;;
+        build)
+            local dep="prepare_build"
+            ;;
+        prepare_build)
+            local dep="coding_style"
+            ;;
+        coding_style)
+            local dep="setup"
+            ;;
+    esac
+
+    echo "${dep}"
 }
 
 function port_is_open() {
@@ -215,8 +228,8 @@ _stage_coding_style() {
         check_parameters="${check_parameters} --javascript"
     fi
 
-    bash check-guidelines.sh --init
-    bash check-guidelines.sh -v ${check_parameters}
+    #bash check-guidelines.sh --init
+    #bash check-guidelines.sh -v ${check_parameters}
 
     # Propagate possible errors
     local exit_code=${?}
@@ -286,7 +299,7 @@ _stage_run_tests() {
 
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
-            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
+            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/profiles/contrib/${DRUPAL_TRAVIS_PROJECT_NAME} || exit 1
         ;;
         "run-tests")
             php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT} ${DRUPAL_TRAVIS_TEST_GROUP} || exit 1
