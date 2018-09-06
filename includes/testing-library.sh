@@ -252,8 +252,8 @@ _stage_coding_style() {
         check_parameters="${check_parameters} --javascript"
     fi
 
-    #bash check-guidelines.sh --init
-    #bash check-guidelines.sh -v ${check_parameters}
+    bash check-guidelines.sh --init
+    bash check-guidelines.sh -v ${check_parameters}
 
     # Propagate possible errors
     local exit_code=${?}
