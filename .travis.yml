@@ -21,7 +21,7 @@ env:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
   global:
-    - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
+    - PATH="$TRAVIS_BUILD_DIR/bin:${TRAVIS_BUILD_DIR}/vendor/bin:$PATH"
 
 before_install:
   - composer config repositories.drupal composer https://packages.drupal.org/8
@@ -31,8 +31,8 @@ before_install:
   - composer config repositories.custom_list git https://github.com/thunder/custom_list.git
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
-  - composer require npm-asset/select2:~4.0 --no-update
   - composer require drupal/select2:dev-8.x-1.x --no-update
+  - composer require npm-asset/select2:~4.0 --no-update --working-dir=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
 
 install:
   - composer install
