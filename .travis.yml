@@ -32,10 +32,10 @@ before_install:
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
   - composer require drupal/select2:dev-8.x-1.x --no-update
-  - composer require npm-asset/select2:~4.0 --no-update --working-dir=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
 
 install:
   - composer install
+  - composer require npm-asset/select2:~4.0 --no-update --working-dir=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
 
 script:
   - test-drupal-module
