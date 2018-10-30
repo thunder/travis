@@ -36,7 +36,7 @@ before_install:
 install:
   - composer install
   - test-drupal-module prepare_build
-  - if [[ ${DRUPAL_TRAVIS_PROJECT_BASEDIR} == ${TRAVIS_BUILD_DIR}/vendor/drupal/select2 ]]; then composer require npm-asset/select2:~4.0 --no-update --working-dir=/tmp/test/select2/install2 ; fi
+  - if [[ ${DRUPAL_TRAVIS_PROJECT_BASEDIR} == ${TRAVIS_BUILD_DIR}/vendor/drupal/select2 ]]; then composer require npm-asset/select2:~4.0 --no-update --working-dir=/tmp/test/select2 ; fi
 
 script:
   - test-drupal-module
