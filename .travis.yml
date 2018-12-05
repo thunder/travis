@@ -19,7 +19,7 @@ env:
   matrix:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
-    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/burdamagazinorg/thunder;DRUPAL_TRAVIS_DISTRIBUTION=thunder
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/burdamagazinorg/thunder; export DRUPAL_TRAVIS_DISTRIBUTION=thunder
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
 
