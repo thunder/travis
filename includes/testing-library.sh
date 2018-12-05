@@ -124,8 +124,13 @@ get_project_type_directory() {
 require_local_project() {
     local dev_dependency
 
-    composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+        composer config repositories.thunder path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    else
+        composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    fi
+
     composer require ${DRUPAL_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
@@ -139,12 +144,26 @@ composer_install() {
 }
 
 create_drupal_project() {
-    composer create-project drupal-composer/drupal-project:8.x-dev ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
-    composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    local composer_project="drupal-composer/drupal-project:8.x-dev"
+
+    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+        composer_project="burdamagazinorg/thunder-project:2.x"
+    fi
+
+    composer create-project ${composer_project} ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
+
+    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} != "thunder" ]; then
+        composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    fi
+
     composer require drupal/core:${DRUPAL_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 move_assets() {
+    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+        return
+    fi
+
     local libraries=$(get_distribution_docroot)/libraries;
     mkdir ${libraries}
 
@@ -220,7 +239,7 @@ _stage_setup() {
     if  ! port_is_open ${DRUPAL_TRAVIS_DATABASE_HOST} ${DRUPAL_TRAVIS_DATABASE_PORT} ; then
         printf "Starting database\n"
         if [ ${DRUPAL_TRAVIS_DATABASE_PASSWORD} ]; then
-            docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+            docker start database-for-tests 2>/dev/null || docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
             wait_for_container database-for-tests
         else
             printf "No database password given. The docker container can only be started, when the environment variable DRUPAL_TRAVIS_DATABASE_PASSWORD is set to an non empty value\n"
@@ -292,8 +311,13 @@ _stage_install() {
     local profile="minimal"
     local additional_drush_parameter=""
 
+    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+        profile="thunder"
+        additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo"
+    fi
+
     PHP_OPTIONS="-d sendmail_path=$(which true)"
-    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
+    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes ${additional_drush_parameter}
     ${drush} pm-enable simpletest
 }
 
