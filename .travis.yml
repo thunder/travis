@@ -19,6 +19,7 @@ env:
   matrix:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/burdamagazinorg/thunder;DRUPAL_TRAVIS_DISTRIBUTION=thunder
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
 
@@ -30,7 +31,7 @@ before_install:
   - composer config repositories.custom_list git https://github.com/thunder/custom_list.git
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
-
+  - composer require burdamagatinorg/thunder:dev-8.x-2.x --no-update
 install:
   - composer install
 
