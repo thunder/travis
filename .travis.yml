@@ -1,4 +1,5 @@
 language: php
+dist: xenial
 
 cache:
   apt: true
@@ -9,8 +10,6 @@ cache:
 
 php:
   - 7.2
-
-dist: xenial
 
 services:
   - mysql
