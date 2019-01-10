@@ -1,11 +1,11 @@
 language: php
 dist: xenial
 
-services:
-  - mysql
-
 php:
   - 7.2
+
+services:
+  - mysql
 
 cache:
   apt: true
