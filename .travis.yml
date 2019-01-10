@@ -11,6 +11,7 @@ php:
   - 7.2
 
 dist: xenial
+
 services:
   - mysql
 
