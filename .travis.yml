@@ -19,7 +19,7 @@ env:
   matrix:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
-    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/scheduler_content_moderation_integration
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/scheduler_content_moderation_integration DRUPAL_TRAVIS_TEST_JAVASCRIPT=false
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
 
@@ -32,7 +32,7 @@ before_install:
   - composer config repositories.scheduler_content_moderation_integration git https://github.com/thunder/scheduler_content_moderation_integration.git
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
-  - composer require drupal/scheduler_content_moderation_integration:dev-fix/3026057-permissions-are-not-checked-on-node-save --no-update
+  - composer require drupal/scheduler_content_moderation_integration:dev-8.x-1.x --no-update
 
 install:
   - composer install
