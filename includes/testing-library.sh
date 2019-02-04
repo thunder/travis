@@ -294,7 +294,7 @@ _stage_install() {
     local additional_drush_parameter=""
 
     PHP_OPTIONS="-d sendmail_path=$(which true)"
-    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
+    ${drush} site-install ${profile} -vvv --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
     ${drush} pm-enable simpletest
 }
 
