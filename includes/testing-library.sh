@@ -324,7 +324,8 @@ _stage_run_tests() {
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local runtests=${docroot}/core/scripts/run-tests.sh
     local settings_file=${docroot}/sites/default/settings.php
-    local project_test_directory=${docroot}/${project_type_directory}/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}
+    local test_location=${DRUPAL_TRAVIS_TEST_LOCATION:-${project_type_directory}/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}}
+    local project_test_directory=${docroot}/${test_location}
 
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
