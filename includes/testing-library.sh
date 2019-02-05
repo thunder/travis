@@ -232,7 +232,7 @@ _stage_setup() {
 
     if [ -x "$(command -v phpenv)" ]; then
         printf "Configure php\n"
-        phpenv config-rm xdebug.ini
+        phpenv config-rm xdebug.ini || true
         # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
         echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
         phpenv config-add drupal.php.ini
