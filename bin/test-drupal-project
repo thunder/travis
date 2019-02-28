@@ -81,7 +81,11 @@ SCRIPT_DIR=$(get_script_dir)
 ### Source required files ###
 
 source ${SCRIPT_DIR}/../configuration.sh
-source ${SCRIPT_DIR}/../lib/includes.sh
+
+for library in ${SCRIPT_DIR}/../lib/*.sh; do
+   source ${library}
+done
+
 
 ### Run stage ###
 
@@ -98,5 +102,5 @@ dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
 run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
 
 if stage_is_finished "run_tests" && ${DRUPAL_TRAVIS_CLEANUP}; then
-    clean_up
+    run_stage "clean_up"
 fi
