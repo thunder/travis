@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Use this file as reference on what you can configure. You can set each of these variables in the environment
+# to override the default values.
 
 # Set ${TRAVIS} to false on non travis builds.
 TRAVIS=${TRAVIS:-false}
@@ -66,6 +68,9 @@ DRUPAL_TRAVIS_SELENIUM_HOST=${DRUPAL_TRAVIS_SELENIUM_HOST:-${DRUPAL_TRAVIS_HTTP_
 # The selenium port. Defaults to 4444.
 DRUPAL_TRAVIS_SELENIUM_PORT=${DRUPAL_TRAVIS_SELENIUM_PORT:-4444}
 
+# The name for the selenium docker container. Defaults to selenium-for-drupal-tests
+DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME=${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME:-selenium-for-drupal-tests}
+
 # The database host. Defaults to the web server host.
 DRUPAL_TRAVIS_DATABASE_HOST=${DRUPAL_TRAVIS_DATABASE_HOST:-${DRUPAL_TRAVIS_HTTP_HOST}}
 
@@ -80,6 +85,9 @@ DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}
 
 # The database name. Defaults to drupaltesting
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
+
+# The name for the database docker container. Defaults to database-for-drupal-tests
+DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
 
 # The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
 # If you prefer the output of drupal run-tests.sh set this to run-tests

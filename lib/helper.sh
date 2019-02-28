@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-
 ### Helper functions ###
-
 
 function port_is_open() {
 	local host=${1}
@@ -27,26 +25,6 @@ function wait_for_port() {
 		fi
 		count=$[count+1]
 	done
-}
-
-# Test docker container health status
-function get_container_health {
-    docker inspect --format "{{json .State.Health.Status }}" $1
-}
-
-# Wait till docker container is fully started
-function wait_for_container {
-    local container=${1}
-    printf "Waiting for container ${container}."
-    while local status=$(get_container_health ${container}); [ ${status} != "\"healthy\"" ]; do
-        if [ ${status} == "\"unhealthy\"" ]; then
-            printf "Container ${container} failed to start. \n"
-            exit 1
-        fi
-        printf "."
-        sleep 1
-    done
-    printf " Container started!\n"
 }
 
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.

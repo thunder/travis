@@ -29,10 +29,11 @@ move_assets() {
     local libraries=$(get_distribution_docroot)/libraries;
     mkdir ${libraries}
 
-    if [ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
+    if [[ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]]; then
         mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
     fi
-    if [ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]; then
+
+    if [[ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]]; then
         mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
     fi
 }
@@ -42,10 +43,18 @@ clean_up() {
         return
     fi
 
-    docker rm -f -v selenium-for-tests
+    if container_exists ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}; then
+        docker rm -f -v ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}
+    fi
+
+    if container_exists ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}; then
+        docker rm -f -v ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}
+    fi
 
     chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+
     rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
 }

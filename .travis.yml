@@ -41,7 +41,7 @@ install:
   - composer install
 
 script:
-  - test-drupal-module
+  - test-drupal-project
 
 notifications:
   email: false

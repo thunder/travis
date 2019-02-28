@@ -60,7 +60,7 @@ While the general approach is very similar to drupal_ti, we differ in some regar
  - If you want a simple travis.yml file, that works without any configuration, use this package.
  - You can directly use this for quickly running the tests locally as well! All you need is php command line client, composer, chromedriver and docker (or mysql running natively).
    If you have all this installed on your local machine, just do <code>composer global require thunder/travis</code> add the global 
-   composer directory to your $PATH and call <code>test-drupal-module</code> from within your modules directory. Everything will be build, installed
+   composer directory to your $PATH and call <code>test-drupal-project</code> from within your modules directory. Everything will be build, installed
    and tested automatically.
  
 # Configuration
@@ -131,13 +131,13 @@ An example for such a custom .travis.yml would be:
       - composer global require thunder/travis
 
     install:
-      - test-drupal-module build
+      - test-drupal-project build
       # Download something to the ccurrent directory.
       - wget -qO- https://www.some-domain.com/some-needed-dependency.tar.gz | tar xvz
 
     script:
       # this continues after the build step and finishes testing.
-      - test-drupal-module
+      - test-drupal-project
 
 # Environment variables
 
@@ -149,7 +149,7 @@ informations). Variables can be set in the env section of the .travis.yml.
 
 ## Available variables
 
-Find all defined variables in [includes/environment.sh](https://github.com/thunder/travis/blob/master/includes/environment.sh)
+Find all defined variables in [configuration.sh](https://github.com/thunder/travis/blob/master/configuration.sh)
 
 Some interesting variables are:
 
@@ -241,17 +241,20 @@ the selenium hub, that is used for travis runs, that is why we provide different
 Example .travis.yml with some variables set:
 
     language: php
-    sudo: required
-
+    dist: xenial
+    
+    php:
+      - 7.2
+    
+    services:
+      - mysql
+    
     cache:
       apt: true
       directories:
       - "$HOME/.composer/cache"
       - "$HOME/.drush/cache"
       - "$HOME/.npm"
-
-    php:
-      - 7.2
 
     branches:
       only:
@@ -276,4 +279,4 @@ Example .travis.yml with some variables set:
       - composer global require thunder/travis
 
     script:
-      - test-drupal-module
+      - test-drupal-project

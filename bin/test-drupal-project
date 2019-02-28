@@ -76,13 +76,12 @@ done
 ### Fallback values ###
 
 DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
+SCRIPT_DIR=$(get_script_dir)
 
 ### Source required files ###
 
-source $(get_script_dir)/../configuration.sh
-source $(get_script_dir)/../library/helper.sh
-source $(get_script_dir)/../library/stage.sh
-source $(get_script_dir)/../library/build.sh
+source ${SCRIPT_DIR}/../configuration.sh
+source ${SCRIPT_DIR}/../lib/includes.sh
 
 ### Run stage ###
 
