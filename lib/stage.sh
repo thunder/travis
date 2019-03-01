@@ -30,24 +30,26 @@ stage_exists() {
 }
 
 stage_dependency() {
+    local dep=""
+
     case ${1} in
         run_tests)
-            local dep="start_web_server"
+            dep="start_web_server"
             ;;
         start_web_server)
-            local dep="install"
+            dep="install"
             ;;
         install)
-            local dep="build"
+            dep="build"
             ;;
         build)
-            local dep="prepare_build"
+            dep="prepare_build"
             ;;
         prepare_build)
-            local dep="setup"
+            dep="setup"
             ;;
         setup)
-            local dep="coding_style"
+            dep="coding_style"
             ;;
     esac
 

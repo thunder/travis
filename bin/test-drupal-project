@@ -49,16 +49,13 @@ for i in "${@}"; do
         ;;
         -co | --clean-only)
             clean_only=true
-            break
         ;;
         -nc | --no-cleanup)
             DRUPAL_TRAVIS_CLEANUP=false
-            break
         ;;
         -v)
             DRUPAL_TRAVIS_VERBOSE=true
             set -o xtrace
-            break
         ;;
         -?*)
             printf "Unknown option: ${i}\n"
@@ -68,7 +65,6 @@ for i in "${@}"; do
         *)
         # last option has to be the test stage
             DRUPAL_TRAVIS_TEST_STAGE=${i}
-            break
     esac
 done
 
