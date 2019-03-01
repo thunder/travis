@@ -63,7 +63,7 @@ stage_is_finished() {
 finish_stage() {
     local stage="${1}"
 
-    if [ ! -d ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
+    if [[ ! -d ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY} ]]; then
         mkdir -p ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
     fi
 

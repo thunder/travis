@@ -13,7 +13,6 @@ _stage_coding_style() {
     if ${DRUPAL_TRAVIS_TEST_JAVASCRIPT}; then
         __test_javascript_coding_styles
     fi
-
 }
 
 __test_php_coding_styles() {

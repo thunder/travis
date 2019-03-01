@@ -29,7 +29,9 @@ function get_container_health {
 # Wait till docker container is fully started
 function wait_for_container {
     local container=${1}
+
     printf "Waiting for container ${container}."
+
     while local status=$(get_container_health ${container}); [[ ${status} != "\"healthy\"" ]]; do
         if [[ ${status} == "\"unhealthy\"" ]]; then
             printf "Container ${container} failed to start. \n"
@@ -38,5 +40,6 @@ function wait_for_container {
         printf "."
         sleep 1
     done
+
     printf "Container started!\n"
 }

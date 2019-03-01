@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _stage_prepare_build() {
-    # If we test a full project, we already have all dependencies we need within the projects composer.json
+    # When we test a full project, we already have all dependencies we need within the projects composer.json
     if [[ ${DRUPAL_TRAVIS_PROJECT_TYPE} = "project" ]]; then
         return
     fi
