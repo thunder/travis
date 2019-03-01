@@ -20,7 +20,7 @@ __test_php_coding_styles() {
     printf "Checking php coding styles\n\n"
 
     phpcs -p --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --report=summary --ignore=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN} .
-    phpcs -p --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --report=summary --ignore=*/vendor/*,*.md .
+    phpcs -p --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --report=summary --ignore=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN} .
 }
 
 __test_javascript_coding_styles() {
