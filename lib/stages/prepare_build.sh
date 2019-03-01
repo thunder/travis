@@ -25,6 +25,6 @@ _stage_prepare_build() {
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
     for dev_dependency in $(jq -r  '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json); do
-        composer require $dev_dependency --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer require ${dev_dependency} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     done
 }

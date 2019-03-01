@@ -5,6 +5,9 @@
 # Set ${TRAVIS} to false on non travis builds.
 TRAVIS=${TRAVIS:-false}
 
+# Generate more verbose output, defaults to false. Can also be set to true by providing the -v parameter to the invoking command.
+DRUPAL_TRAVIS_VERBOSE=false
+
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TRAVIS_PROJECT_BASEDIR=${DRUPAL_TRAVIS_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
 

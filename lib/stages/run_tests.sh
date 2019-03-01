@@ -4,7 +4,7 @@
 _stage_run_tests() {
     printf "Running tests\n\n"
 
-    local test_selection
+    local test_selection=""
     local docroot=$(get_distribution_docroot)
     local composer_bin_dir=$(get_composer_bin_directory)
     local project_type_directory=$(get_project_type_directory)

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
 
 ### Functions ###
 
@@ -23,6 +25,7 @@ Parameter:
 Options:
     -h,  --help              Display this help.
     -nc, --no-cleanup        Do not cleanup after successful tests. Set this option to keep the installation.
+    -co, --clean-only        Just run cleanup and exit.
 
 Example:
     test-drupal-module               Run everything.
@@ -44,8 +47,17 @@ for i in "${@}"; do
             show_help
             exit
         ;;
+        -co | --clean-only)
+            clean_only=true
+            break
+        ;;
         -nc | --no-cleanup)
             DRUPAL_TRAVIS_CLEANUP=false
+            break
+        ;;
+        -v)
+            DRUPAL_TRAVIS_VERBOSE=true
+            set -o xtrace
             break
         ;;
         -?*)
@@ -73,6 +85,10 @@ for library in ${SCRIPT_DIR}/../lib/*.sh; do
    source ${library}
 done
 
+if ${clean_only:-false}; then
+    clean_up
+    exit
+fi
 
 ### Run stage ###
 
