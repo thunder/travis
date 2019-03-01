@@ -5,7 +5,7 @@
 get_distribution_docroot() {
     local docroot="web"
 
-    if [ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]; then
+    if [[ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]]; then
         docroot="docroot"
     fi
 
@@ -13,7 +13,7 @@ get_distribution_docroot() {
 }
 
 get_composer_bin_directory() {
-    if [ ! -f ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
+    if [[ ! -f ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]]; then
         exit 1
     fi
 
@@ -23,7 +23,7 @@ get_composer_bin_directory() {
 }
 
 get_project_type_directory() {
-    if [ ! -f ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json ]; then
+    if [[ ! -f ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json ]]; then
         local project_type="drupal-module"
     else
         local project_type=$(jq -er '.type // "drupal-module"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)
