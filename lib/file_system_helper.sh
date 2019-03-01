@@ -9,7 +9,7 @@ get_distribution_docroot() {
         docroot="docroot"
     fi
 
-    echo ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
+    echo "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
 }
 
 get_composer_bin_directory() {
@@ -19,7 +19,7 @@ get_composer_bin_directory() {
 
     local composer_bin_dir=${DRUPAL_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
 
-    echo ${composer_bin_dir}
+    echo "${composer_bin_dir}"
 }
 
 get_project_type_directory() {

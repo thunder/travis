@@ -11,6 +11,9 @@ DRUPAL_TRAVIS_VERBOSE=false
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TRAVIS_PROJECT_BASEDIR=${DRUPAL_TRAVIS_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
 
+# The type of the project, could be "drupal-module" "drupal-theme" "drupal-profile" or "project"
+DRUPAL_TRAVIS_PROJECT_TYPE=${DRUPAL_TRAVIS_PROJECT_TYPE:-$(jq -er '.type // "project"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
+
 # The distribution to use. Currently only drupal core is supported.
 DRUPAL_TRAVIS_DISTRIBUTION=${DRUPAL_TRAVIS_DISTRIBUTION:-drupal}
 
@@ -87,7 +90,7 @@ DRUPAL_TRAVIS_DATABASE_PORT=${DRUPAL_TRAVIS_DATABASE_PORT:-3306}
 DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
 
 # The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default.
-DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}
+DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
 
 # The database name. Defaults to drupaltesting
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
