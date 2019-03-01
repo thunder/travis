@@ -18,11 +18,11 @@ get_script_dir() {
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
-NC='\033[0m'
+TRANSPARENT='\033[0m'
 ME=${0##*/}
 CURRENT=test-drupal-project
 
-printf "${RED}*** Usage of ${ME} is deprecated please use ${CURRENT} instead. ***${NC}\n"
-printf "${YELLOW}Running ${CURRENT} instead.${NC}\n"
+printf "${RED}*** Usage of ${ME} is deprecated please use ${CURRENT} instead. ***${TRANSPARENT}\n"
+printf "${YELLOW}Running ${CURRENT} instead.${TRANSPARENT}\n"
 
 source $(get_script_dir)/${CURRENT}
