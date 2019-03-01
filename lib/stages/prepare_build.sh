@@ -2,9 +2,6 @@
 
 _stage_prepare_build() {
     printf "Prepare composer.json\n\n"
-    if ${TRAVIS}; then
-        composer global require hirak/prestissimo
-    fi
 
     # Build is based on drupal project
     composer create-project drupal-composer/drupal-project:8.x-dev ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install

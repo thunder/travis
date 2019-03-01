@@ -6,26 +6,34 @@ _stage_coding_style() {
         return
     fi
 
-    local check_parameters=""
-
-    if ! [ -x "$(command -v eslint)" ]; then
-        npm install -g eslint
-    fi
-
     if ${DRUPAL_TRAVIS_TEST_PHP}; then
-        check_parameters="${check_parameters} --phpcs"
+        __test_php_coding_styles
     fi
 
     if ${DRUPAL_TRAVIS_TEST_JAVASCRIPT}; then
-        check_parameters="${check_parameters} --javascript"
+        __test_javascript_coding_styles
     fi
 
-    bash check-guidelines.sh --init
-    bash check-guidelines.sh -v ${check_parameters}
+}
 
-    # Propagate possible errors
-    local exit_code=${?}
-    if [ ${exit_code} -ne 0 ]; then
-        exit ${exit_code}
-    fi
+__test_php_coding_styles() {
+    printf "Checking php coding styles\n\n"
+
+    phpcs -p --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --report=summary --ignore=*/vendor/*,*.md .
+    phpcs -p --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --report=summary --ignore=*/vendor/*,*.md .
+}
+
+__test_javascript_coding_styles() {
+        if ! [[ -f .eslintrc ]]; then
+            printf "${YELLOW}No .eslintrc file found. Skipping javascript coding style test.${NC}\n\n"
+            return;
+        fi
+
+        printf "Checking javascript coding styles\n\n"
+
+        if ! [[ -x "$(command -v eslint)" ]]; then
+            npm install -g eslint
+        fi
+
+        eslint .
 }
