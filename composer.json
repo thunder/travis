@@ -13,6 +13,7 @@
     ],
     "bin": [
         "bin/keep-travis-running",
+        "bin/test-drupal-module",
         "bin/test-drupal-module"
     ],
     "require": {
