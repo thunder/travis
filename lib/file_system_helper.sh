@@ -23,21 +23,16 @@ get_composer_bin_directory() {
 }
 
 get_project_type_directory() {
-    if [[ ! -f ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json ]]; then
-        local project_type="drupal-module"
-    else
-        local project_type=$(jq -er '.type // "drupal-module"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)
-    fi
-
-    case ${project_type} in
+    local project_type_directory=""
+    case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
         drupal-module)
-            local project_type_directory="modules"
+            project_type_directory="modules"
             ;;
         drupal-profile)
-            local project_type_directory="profiles"
+            project_type_directory="profiles"
             ;;
         drupal-theme)
-            local project_type_directory="themes"
+            project_type_directory="themes"
             ;;
     esac
 
