@@ -93,9 +93,9 @@ DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-databas
 # If you prefer the output of drupal run-tests.sh set this to run-tests
 DRUPAL_TRAVIS_TEST_RUNNER=${DRUPAL_TRAVIS_TEST_RUNNER:-phpunit}
 
-# By default all created files are deleted after successfull test runs, you can disable this behaviour by setting
+# By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
-DRUPAL_TRAVIS_NO_CLEANUP=${DRUPAL_TRAVIS_NO_CLEANUP:-false}
+DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.

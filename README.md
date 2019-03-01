@@ -222,10 +222,10 @@ If you run your tests locally, you might want to change these to your local mysq
 The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
 If you prefer the output if the drupal run-tests.sh set this to run-tests.
 
-- DRUPAL_TRAVIS_NO_CLEANUP
+- DRUPAL_TRAVIS_CLEANUP
 
-By default all created files are deleted after successfull test runs, you can disable this behaviour by setting
-this to true.
+By default all created files are deleted after successful test runs, you can disable this behaviour by setting
+this to false.
 
 - SYMFONY_DEPRECATIONS_HELPER
 

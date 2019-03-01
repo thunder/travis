@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-_stage_clean_up() {
-    if ${DRUPAL_TRAVIS_NO_CLEANUP}; then
-        return
-    fi
-
+clean_up() {
     if container_exists ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}; then
         docker rm -f -v ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}
     fi

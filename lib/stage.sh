@@ -9,7 +9,7 @@ run_stage() {
 
     local dependency=$(stage_dependency ${stage})
 
-    if [ ! -z ${dependency} ]; then
+    if [[ ! -z ${dependency} ]]; then
         run_stage ${dependency}
     fi
 
@@ -55,7 +55,7 @@ stage_dependency() {
 }
 
 stage_is_finished() {
-    [ -f "${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]
+    [[ -f "${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]]
 }
 
 finish_stage() {
