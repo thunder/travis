@@ -98,10 +98,6 @@ DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 # The name for the database docker container. Defaults to database-for-drupal-tests
 DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
 
-# The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
-# If you prefer the output of drupal run-tests.sh set this to run-tests
-DRUPAL_TRAVIS_TEST_RUNNER=${DRUPAL_TRAVIS_TEST_RUNNER:-phpunit}
-
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
 DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}

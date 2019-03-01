@@ -22,19 +22,26 @@ get_composer_bin_directory() {
     echo "${composer_bin_dir}"
 }
 
-get_project_type_directory() {
-    local project_type_directory=""
-    case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
-        drupal-module)
-            project_type_directory="modules"
-            ;;
-        drupal-profile)
-            project_type_directory="profiles"
-            ;;
-        drupal-theme)
-            project_type_directory="themes"
-            ;;
-    esac
+get_project_test_location() {
+    local docroot=$(get_distribution_docroot)
 
-    echo "${project_type_directory}"
+    if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} -ne "" ]]; then
+        echo "${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"
+    else
+        # Full projects will be tested in the docroot. Modules, themes and profiles in their sub folders.
+        case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
+            drupal-module)
+                project_type_test_location="${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                ;;
+            drupal-profile)
+                project_type_test_location="${docroot}/profiles/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                ;;
+            drupal-theme)
+                project_type_test_location="${docroot}/themes/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                ;;
+             *)
+                project_type_test_location="${docroot}"
+        esac
+        echo "${project_type_test_location}"
+    fi
 }

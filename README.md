@@ -217,11 +217,6 @@ The database information. Defaults to the web server host, port 3306, user travi
 This is the default configuration for the travis php environment. The database name is set to drupaltesting.
 If you run your tests locally, you might want to change these to your local mysql installation.
 
-- DRUPAL_TRAVIS_TEST_RUNNER
-
-The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
-If you prefer the output if the drupal run-tests.sh set this to run-tests.
-
 - DRUPAL_TRAVIS_CLEANUP
 
 By default all created files are deleted after successful test runs, you can disable this behaviour by setting
@@ -268,8 +263,6 @@ Example .travis.yml with some variables set:
         - SYMFONY_DEPRECATIONS_HELPER=0
       global:
         - PATH="$PATH:$HOME/.composer/vendor/bin"
-        # Run with run-tests.sh instead of directly calling phpunit
-        - DRUPAL_TRAVIS_TEST_RUNNER="test-runner"
 
     matrix:
       allow_failures:
