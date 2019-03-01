@@ -17,7 +17,6 @@ cache:
 branches:
   only:
     - master
-    - feature/project
 
 env:
   matrix:
