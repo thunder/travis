@@ -19,8 +19,12 @@ _stage_setup() {
         # We start a docker container, they need a password set so we set one now if none was given.
         # We do not generally provide a default password, because already running database instances might have no
         # password. This is e.g. the case for the default travis database.
-        local docker_database_password=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-123456}
-        docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME} --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${docker_database_password}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+        if container_exists ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME} && container_is_stopped ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}; then
+            docker start ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}
+        else
+            docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME} --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+        fi
+
         wait_for_container ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}
     fi
 
