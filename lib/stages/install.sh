@@ -13,7 +13,7 @@ _stage_install() {
         ${drush} --verbose --db-url=${SIMPLETEST_DB} --existing-config --yes site-install
     else
         local profile="minimal"
-        ${drush} ${profile} -v --db-url=${SIMPLETEST_DB} --yes site-install
+        ${drush} -v --db-url=${SIMPLETEST_DB} --yes site-install ${profile}
     fi
 
     ${drush} pm-enable simpletest
