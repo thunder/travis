@@ -6,19 +6,20 @@ _stage_setup() {
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting web driver\n"
+
         if ${TRAVIS} = true; then
             docker run --detach --net host --name ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME} --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         else
             chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
         fi
+
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
 
     if  ! port_is_open ${DRUPAL_TRAVIS_DATABASE_HOST} ${DRUPAL_TRAVIS_DATABASE_PORT} ; then
         printf "Starting database\n"
-        # We start a docker container, they need a password set so we set one now if none was given.
-        # We do not generally provide a default password, because already running database instances might have no
-        # password. This is e.g. the case for the default travis database.
+
+        # Starting existing but stopped conatiner, or satrting new container if non was created yet.
         if container_exists ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME} && container_is_stopped ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}; then
             docker start ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}
         else
