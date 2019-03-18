@@ -12,7 +12,9 @@ _stage_run_tests() {
 
     if ${DRUPAL_TRAVIS_TEST_DEPRECATION} && [[ -f phpstan.neon ]]; then
         printf "Checking for deprecations.\n\n"
+        cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         phpstan analyse --memory-limit 300M ${project_location}
+        cd -
     fi
 
     if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
