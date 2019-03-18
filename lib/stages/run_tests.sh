@@ -8,11 +8,16 @@ _stage_run_tests() {
     local docroot=$(get_distribution_docroot)
     local composer_bin_dir=$(get_composer_bin_directory)
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
-    local project_test_location=$(get_project_test_location)
+    local project_location=$(get_project_location)
+
+    if ${DRUPAL_TRAVIS_TEST_DEPRECATION} && [[ -f phpstan.neon ]]; then
+        printf "Checking for deprecations.\n\n"
+        phpstan analyse --memory-limit 300M ${project_location}
+    fi
 
     if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-    php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_test_location} || exit 1
+    php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location} || exit 1
 }
