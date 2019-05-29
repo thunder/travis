@@ -39,6 +39,7 @@ before_install:
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
   - composer require drupal/scheduler_content_moderation_integration:dev-8.x-1.x --no-update
   - composer require drupal/select2:dev-fix/3057799-coding-style --no-update
+  - composer require npm-asset/select2:~4.0 --working-dir=/tmp/test/select2/install
 
 install:
   - composer install
