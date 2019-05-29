@@ -23,6 +23,7 @@ env:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/scheduler_content_moderation_integration DRUPAL_TRAVIS_TEST_JAVASCRIPT=false
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
     - DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN="*.md"
@@ -37,6 +38,7 @@ before_install:
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
   - composer require drupal/scheduler_content_moderation_integration:dev-8.x-1.x --no-update
+  - composer require drupal/select2:dev-8.x-1.x --no-update
 
 install:
   - composer install
