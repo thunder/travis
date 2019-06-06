@@ -71,7 +71,7 @@ DRUPAL_TRAVIS_HTTP_HOST=${DRUPAL_TRAVIS_HTTP_HOST:-127.0.0.1}
 # The web server port. Defaults to 8888
 DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 
-# The selenium chrome docker version to use. defaults to the latest version.
+# The selenium chrome docker version to use. Currently defaults to 3.141.59-oxygen, because the most recent version is problematic.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
 
 # The selenium host. Defaults to the web server host.

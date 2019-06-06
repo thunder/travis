@@ -28,9 +28,9 @@ Options:
     -co, --clean-only        Just run cleanup and exit.
 
 Example:
-    test-drupal-module               Run everything.
-    test-drupal-module coding_style  Just test coding style.
-    test-drupal-module build         Build the projects docroot, but does not install or test yet.
+    test-drupal-project               Run everything.
+    test-drupal-project coding_style  Just test coding style.
+    test-drupal-project build         Build the projects docroot, but does not install or test yet.
 EOF
 }
 

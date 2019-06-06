@@ -76,7 +76,7 @@ step as a parameter: <code>test_drupal_module build</code> would call the build 
 depends on. Steps, that have already been executed will not be called again on subsequent call. So, if you call
 <code>test_drupal_module start_web_server</code> next, all steps up to the build step will not be executed.
 
-The steps are the following:
+The steps are the following:D
 
 ### setup
 Setup the testing environment. Starts selenium and mysql if necessary and tweaks php on travis 
