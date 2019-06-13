@@ -11,7 +11,11 @@ _stage_run_tests() {
     local project_location=$(get_project_location)
 
     if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
-       test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
+       test_selection="${test_selection} --group ${DRUPAL_TRAVIS_TEST_GROUP}"
+    fi
+
+    if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
+       test_selection="${test_selection} --filter ${DRUPAL_TRAVIS_TEST_FILTER}"
     fi
 
     php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location} || exit 1

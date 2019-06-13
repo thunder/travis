@@ -28,9 +28,4 @@ _stage_setup() {
 
         wait_for_container ${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME}
     fi
-
-    if [[ -x "$(command -v phpenv)" ]]; then
-        printf "Configure php\n"
-        phpenv config-rm xdebug.ini || true
-    fi
 }
