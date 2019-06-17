@@ -7,6 +7,7 @@ _stage_install() {
     local composer_bin_dir=$(get_composer_bin_directory)
     local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}}"
     local drush_install_options="--verbose --db-url=${SIMPLETEST_DB} --yes"
+    local installation_form_values=${DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES}
 
     PHP_OPTIONS="-d sendmail_path=$(which true)"
 
