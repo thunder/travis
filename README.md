@@ -173,7 +173,7 @@ concatenate them with comma:  DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
 
 - DRUPAL_TRAVIS_TEST_FILTER
 
-Only runs tests whose name matches the given regular expression pattern. Example: export DRUPAL_TRAVIS_TEST_FILTER=TestCaseClass::testMethod
+Only runs tests whose name matches the given regular expression pattern. Example: DRUPAL_TRAVIS_TEST_FILTER=TestCaseClass::testMethod
 
 - DRUPAL_TRAVIS_TEST_CODING_STYLES
 
