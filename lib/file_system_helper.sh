@@ -5,7 +5,7 @@
 get_distribution_docroot() {
     local docroot="web"
 
-    if [[ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]]; then
+    if [[ ${DRUPAL_TRAVIS_TEST_PROFILE} = "thunder" ]]; then
         docroot="docroot"
     fi
 

@@ -20,9 +20,6 @@ DRUPAL_TRAVIS_TEST_PROFILE=${DRUPAL_TRAVIS_TEST_PROFILE:-minimal}
 # If set to true, drush will install from exported config, otherwise the DRUPAL_TRAVIS_TESTING_PROFILE will be used on install.
 DRUPAL_TRAVIS_INSTALL_FROM_CONFIG=${DRUPAL_TRAVIS_INSTALL_FROM_CONFIG:-false}
 
-# The distribution to use. Currently only drupal core is supported.
-DRUPAL_TRAVIS_DISTRIBUTION=${DRUPAL_TRAVIS_DISTRIBUTION:-drupal}
-
 # The composer name of the current project, if not specified, it will be read from the composer.json.
 DRUPAL_TRAVIS_COMPOSER_NAME=${DRUPAL_TRAVIS_COMPOSER_NAME:-$(jq -r .name ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
@@ -33,9 +30,6 @@ DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(echo ${DRUPAL_TRAVIS_C
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
 DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP:-""}
-
-# The phpunit test filter to restrict the tests.
-DRUPAL_TRAVIS_TEST_FILTER=${DRUPAL_TRAVIS_TEST_FILTER:-""}
 
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
@@ -120,6 +114,9 @@ DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
 
 # The directory where the configuration for the installation with existing config is located.
 DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY=${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY:-"../config/sync"}
+
+# Additional form values for the installation profile. This is uses by drush site-install.
+DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES={DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
