@@ -3,7 +3,7 @@
 _stage_prepare_build() {
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TRAVIS_PROJECT_TYPE} = "project" ]]; then
-        rsync --verbose --archive --exclude=".git" ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/ ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        rsync --archive --exclude=".git" ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/ ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         return
     fi
 
