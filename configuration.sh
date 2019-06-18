@@ -81,6 +81,10 @@ DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
 # The selenium chrome docker version to use. defaults to the latest version.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
 
+# The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
+# When selenium is used, specify DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION instead.
+DRUPAL_TRAVIS_CHROMEDRIVER_VERSION=${DRUPAL_TRAVIS_CHROMEDRIVER_VERSION:-$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_75)}
+
 # The selenium host. Defaults to the web server host.
 DRUPAL_TRAVIS_SELENIUM_HOST=${DRUPAL_TRAVIS_SELENIUM_HOST:-${DRUPAL_TRAVIS_HTTP_HOST}}
 
