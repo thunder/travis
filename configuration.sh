@@ -32,6 +32,9 @@ DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP:-""}
 # By default coding styles are tested.
 DRUPAL_TRAVIS_TEST_CODING_STYLES=${DRUPAL_TRAVIS_TEST_CODING_STYLES:-true}
 
+# The phpunit test filter to restrict the tests.
+DRUPAL_TRAVIS_TEST_FILTER=${DRUPAL_TRAVIS_TEST_FILTER:-""}
+
 # Boolean value if javascript coding style should be tested.
 # By default javascript coding styles are tested.
 DRUPAL_TRAVIS_TEST_JAVASCRIPT=${DRUPAL_TRAVIS_TEST_JAVASCRIPT:-true}
@@ -111,6 +114,9 @@ DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
 
 # The directory where the configuration for the installation with existing config is located.
 DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY=${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY:-"../config/sync"}
+
+# Additional form values for the installation profile. This is uses by drush site-install.
+DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES={DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
