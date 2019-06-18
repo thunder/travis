@@ -60,7 +60,7 @@ While the general approach is very similar to drupal_ti, we differ in some regar
  - If you want a simple travis.yml file, that works without any configuration, use this package.
  - You can directly use this for quickly running the tests locally as well! All you need is php command line client, composer, chromedriver and docker (or mysql running natively).
    If you have all this installed on your local machine, just do <code>composer global require thunder/travis</code> add the global 
-   composer directory to your $PATH and call <code>test-drupal-module</code> from within your modules directory. Everything will be build, installed
+   composer directory to your $PATH and call <code>test-drupal-project</code> from within your modules directory. Everything will be build, installed
    and tested automatically.
  
 # Configuration
@@ -131,13 +131,13 @@ An example for such a custom .travis.yml would be:
       - composer global require thunder/travis
 
     install:
-      - test-drupal-module build
+      - test-drupal-project build
       # Download something to the ccurrent directory.
       - wget -qO- https://www.some-domain.com/some-needed-dependency.tar.gz | tar xvz
 
     script:
       # this continues after the build step and finishes testing.
-      - test-drupal-module
+      - test-drupal-project
 
 # Environment variables
 
@@ -149,7 +149,7 @@ informations). Variables can be set in the env section of the .travis.yml.
 
 ## Available variables
 
-Find all defined variables in [includes/environment.sh](https://github.com/thunder/travis/blob/master/includes/environment.sh)
+Find all defined variables in [configuration.sh](https://github.com/thunder/travis/blob/master/configuration.sh)
 
 Some interesting variables are:
 
@@ -171,6 +171,10 @@ vendor/myproject the project name will be myproject. This will be used as defaul
 The phpunit test group, defaults to the value of ${DRUPAL_TRAVIS_PROJECT_NAME}. To provide multiple groups,
 concatenate them with comma:  DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
 
+- DRUPAL_TRAVIS_TEST_FILTER
+
+Only runs tests whose name matches the given regular expression pattern. Example: DRUPAL_TRAVIS_TEST_FILTER=TestCaseClass::testMethod
+
 - DRUPAL_TRAVIS_TEST_CODING_STYLES
 
 Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
@@ -181,7 +185,6 @@ By default coding styles are tested.
 
 Boolean value if javascript and php coding styles should be tested.
 By default all coding styles are tested.
-
 
 - DRUPAL_TRAVIS_TEST_BASE_DIRECTORY
 
@@ -217,15 +220,10 @@ The database information. Defaults to the web server host, port 3306, user travi
 This is the default configuration for the travis php environment. The database name is set to drupaltesting.
 If you run your tests locally, you might want to change these to your local mysql installation.
 
-- DRUPAL_TRAVIS_TEST_RUNNER
+- DRUPAL_TRAVIS_CLEANUP
 
-The Test runner to use. Allowed values are phpunit and run-tests, defaults to phpunit.
-If you prefer the output if the drupal run-tests.sh set this to run-tests.
-
-- DRUPAL_TRAVIS_NO_CLEANUP
-
-By default all created files are deleted after successfull test runs, you can disable this behaviour by setting
-this to true.
+By default all created files are deleted after successful test runs, you can disable this behaviour by setting
+this to false.
 
 - SYMFONY_DEPRECATIONS_HELPER
 
@@ -235,23 +233,25 @@ The default value is "week" to ignore any deprecation notices.
 
 - MINK_DRIVER_ARGS_WEBDRIVER
 
-The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL than 
-the selenium hub, that is used for travis runs, that is why we provide different defaults for travis / local tests.
+The driver args for webdriver. You might chnage this, when rennung your own chromedriver / selenium instance.
 
 Example .travis.yml with some variables set:
 
     language: php
-    sudo: required
-
+    dist: xenial
+    
+    php:
+      - 7.2
+    
+    services:
+      - mysql
+    
     cache:
       apt: true
       directories:
       - "$HOME/.composer/cache"
       - "$HOME/.drush/cache"
       - "$HOME/.npm"
-
-    php:
-      - 7.2
 
     branches:
       only:
@@ -265,8 +265,6 @@ Example .travis.yml with some variables set:
         - SYMFONY_DEPRECATIONS_HELPER=0
       global:
         - PATH="$PATH:$HOME/.composer/vendor/bin"
-        # Run with run-tests.sh instead of directly calling phpunit
-        - DRUPAL_TRAVIS_TEST_RUNNER="test-runner"
 
     matrix:
       allow_failures:
@@ -276,4 +274,4 @@ Example .travis.yml with some variables set:
       - composer global require thunder/travis
 
     script:
-      - test-drupal-module
+      - test-drupal-project
