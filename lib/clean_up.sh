@@ -2,7 +2,7 @@
 
 clean_up() {
     printf "Cleaning up test environment.\n\n"
-        
+
     if container_exists ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}; then
         docker rm -f -v ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}
     fi
