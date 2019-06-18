@@ -20,8 +20,12 @@ clean_up() {
         rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
     fi
 
+    if [[ -f ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver ]]; then
+        killall chromedriver
+        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver
+    fi
+
     if [[ -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY} ]]; then
-        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/*
         rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
     fi
 }
