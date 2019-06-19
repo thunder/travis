@@ -35,6 +35,9 @@ DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP:-""}
 # By default coding styles are tested.
 DRUPAL_TRAVIS_TEST_CODING_STYLES=${DRUPAL_TRAVIS_TEST_CODING_STYLES:-true}
 
+# The phpunit test filter to restrict the tests.
+DRUPAL_TRAVIS_TEST_FILTER=${DRUPAL_TRAVIS_TEST_FILTER:-""}
+
 # Boolean value if javascript coding style should be tested.
 # By default javascript coding styles are tested.
 DRUPAL_TRAVIS_TEST_JAVASCRIPT=${DRUPAL_TRAVIS_TEST_JAVASCRIPT:-true}
@@ -74,8 +77,16 @@ DRUPAL_TRAVIS_HTTP_HOST=${DRUPAL_TRAVIS_HTTP_HOST:-127.0.0.1}
 # The web server port. Defaults to 8888
 DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 
+# Use selenium to spawn chromedriver. On travis we want to do that, to be able to use the selenium docker.
+# On local development calling chromedriver directly is more straight forward.
+DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
+
 # The selenium chrome docker version to use. defaults to the latest version.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
+
+# The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
+# When selenium is used, specify DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION instead.
+DRUPAL_TRAVIS_CHROMEDRIVER_VERSION=${DRUPAL_TRAVIS_CHROMEDRIVER_VERSION:-$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_75)}
 
 # The selenium host. Defaults to the web server host.
 DRUPAL_TRAVIS_SELENIUM_HOST=${DRUPAL_TRAVIS_SELENIUM_HOST:-${DRUPAL_TRAVIS_HTTP_HOST}}
@@ -115,6 +126,9 @@ DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
 # The directory where the configuration for the installation with existing config is located.
 DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY=${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY:-"../config/sync"}
 
+# Additional form values for the installation profile. This is uses by drush site-install.
+DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES={DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
+
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
 export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
@@ -125,10 +139,5 @@ export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HO
 # The database string, that simpletest will use.
 export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
 
-# The driver args for webdriver. When testing locally, we use chromedriver, which uses a different URL than
-# the selenium hub, that is used for travis runs.
-if ${TRAVIS}; then
-    export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
-else
-    export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}\"]"}
-fi
+# The driver args for webdriver.
+export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}

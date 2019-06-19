@@ -18,5 +18,9 @@ _stage_run_tests() {
         export thunderDumpFile=database-dump.php
     fi
 
+    if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
+       test_selection="${test_selection} --filter ${DRUPAL_TRAVIS_TEST_FILTER}"
+    fi
+
     php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location} || exit 1
 }
