@@ -23,9 +23,10 @@ DRUPAL_TRAVIS_INSTALL_FROM_CONFIG=${DRUPAL_TRAVIS_INSTALL_FROM_CONFIG:-false}
 # The composer name of the current project, if not specified, it will be read from the composer.json.
 DRUPAL_TRAVIS_COMPOSER_NAME=${DRUPAL_TRAVIS_COMPOSER_NAME:-$(jq -r .name ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
-# The project name, if not provided, the second part of the composer name will be use. E.g. If the composer name is
+# The project name, if not provided, the "installer-name" property of the composer extra section is used.
+# Fallback value is the second part of the composer name will be use. E.g. If the composer name is
 # vendor/myproject the project name will be myproject.
-DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(echo ${DRUPAL_TRAVIS_COMPOSER_NAME} | cut -d '/' -f 2)}
+DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo ${DRUPAL_TRAVIS_COMPOSER_NAME} | cut -d '/' -f 2)"  '.extra."installer-name" // $FALLBACK' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
