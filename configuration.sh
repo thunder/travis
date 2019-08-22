@@ -97,6 +97,25 @@ DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME=${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME:-seleniu
 # The database host. Defaults to the web server host.
 DRUPAL_TRAVIS_DATABASE_HOST=${DRUPAL_TRAVIS_DATABASE_HOST:-${DRUPAL_TRAVIS_HTTP_HOST}}
 
+# The database port. Defaults to 3306.
+DRUPAL_TRAVIS_DATABASE_PORT=${DRUPAL_TRAVIS_DATABASE_PORT:-3306}
+
+# The database user. Defaults to travis, which is the default travis database user.
+DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
+
+# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
+if ${TRAVIS}; then
+    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
+else
+    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-"test"}
+fi
+
+# The database name. Defaults to drupaltesting
+DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
+
+# The name for the database docker container. Defaults to database-for-drupal-tests
+DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
+
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
 DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}

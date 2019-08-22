@@ -37,7 +37,7 @@ stage_dependency() {
             dep="start_web_server"
             ;;
         start_web_server)
-            dep="deprecation"
+            dep="install"
             ;;
         install)
             dep="deprecation"

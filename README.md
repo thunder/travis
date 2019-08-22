@@ -211,8 +211,13 @@ The selenium chrome docker version to use. defaults to the latest version.
 The selenium host and port. Defaults to the web server host and port 4444.
 
 - DRUPAL_TRAVIS_DATABASE_HOST
-
-The database information. Defaults to the web server host. sqlite is used by default.
+- DRUPAL_TRAVIS_DATABASE_PORT
+- DRUPAL_TRAVIS_DATABASE_USER
+- DRUPAL_TRAVIS_DATABASE_PASSWORD
+- DRUPAL_TRAVIS_DATABASE_NAME
+The database information. Defaults to the web server host, port 3306, user travis and empty password.
+This is the default configuration for the travis php environment. The database name is set to drupaltesting.
+If you run your tests locally, you might want to change these to your local mysql installation.
 
 - DRUPAL_TRAVIS_CLEANUP
 
