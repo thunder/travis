@@ -97,25 +97,6 @@ DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME=${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME:-seleniu
 # The database host. Defaults to the web server host.
 DRUPAL_TRAVIS_DATABASE_HOST=${DRUPAL_TRAVIS_DATABASE_HOST:-${DRUPAL_TRAVIS_HTTP_HOST}}
 
-# The database port. Defaults to 3306.
-DRUPAL_TRAVIS_DATABASE_PORT=${DRUPAL_TRAVIS_DATABASE_PORT:-3306}
-
-# The database user. Defaults to travis, which is the default travis database user.
-DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
-
-# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
-if ${TRAVIS}; then
-    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
-else
-    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-"test"}
-fi
-
-# The database name. Defaults to drupaltesting
-DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
-
-# The name for the database docker container. Defaults to database-for-drupal-tests
-DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
-
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
 DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
@@ -134,7 +115,7 @@ export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}}
 
 # The database string, that simpletest will use.
-export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
+export SIMPLETEST_DB=${SIMPLETEST_DB:-sqlite://{$DRUPAL_TRAVIS_DATABASE_HOST}/{$DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/test.sqlite}
 
 # The driver args for webdriver.
 export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
