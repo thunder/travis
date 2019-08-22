@@ -215,6 +215,7 @@ The selenium host and port. Defaults to the web server host and port 4444.
 - DRUPAL_TRAVIS_DATABASE_USER
 - DRUPAL_TRAVIS_DATABASE_PASSWORD
 - DRUPAL_TRAVIS_DATABASE_NAME
+
 The database information. Defaults to the web server host, port 3306, user travis and empty password.
 This is the default configuration for the travis php environment. The database name is set to drupaltesting.
 If you run your tests locally, you might want to change these to your local mysql installation.
