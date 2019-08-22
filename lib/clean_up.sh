@@ -25,8 +25,12 @@ clean_up() {
         rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver
     fi
 
-    if [[ -f ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/test.sqlite ]]; then
-        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/test.sqlite
+    if [[ -f ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${DRUPAL_TRAVIS_DATABASE_NAME}.sqlite ]]; then
+        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${DRUPAL_TRAVIS_DATABASE_NAME}.sqlite
+    fi
+
+    if [[ -f ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${DRUPAL_TRAVIS_DATABASE_NAME}.sqlite-shm ]]; then
+        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${DRUPAL_TRAVIS_DATABASE_NAME}.sqlite-shm
     fi
 
     if [[ -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY} ]]; then
