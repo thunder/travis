@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 _stage_install() {
+    # install disabled until thunder testing is implemented.
+    return
     printf "Installing project\n\n"
 
     local docroot=$(get_distribution_docroot)
