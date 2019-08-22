@@ -34,5 +34,10 @@ __test_javascript_coding_styles() {
         npm install -g eslint
     fi
 
+    # Install ESLint requirements
+    if [[ `npm list -g | grep -c eslint-config-drupal-bundle` -eq 0 ]]; then
+        npm install -g eslint-config-drupal-bundle
+    fi
+
     eslint .
 }
