@@ -106,12 +106,10 @@ DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
 # The database name. Defaults to drupaltesting
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 
-# The name for the database docker container. Defaults to database-for-drupal-tests
-DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
-
 # The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
 DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
 
+# The database engine to use. For travis runs this defaults to mysql, local runs will default to sqlite.
 if ${TRAVIS}; then
     DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"mysql"}
 else
