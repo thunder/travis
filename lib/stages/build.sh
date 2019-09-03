@@ -9,7 +9,7 @@ _stage_build() {
 
     # Install all dependencies
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    COMPOSER_MEMORY_LIMIT=-1 composer install
+    COMPOSER_MEMORY_LIMIT=-1 composer install --no-suggest --prefer-dist
 
     # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but
     # this sometimes fails.

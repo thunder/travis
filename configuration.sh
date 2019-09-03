@@ -8,11 +8,17 @@ TRAVIS=${TRAVIS:-false}
 # Generate more verbose output, defaults to false. Can also be set to true by providing the -v parameter to the invoking command.
 DRUPAL_TRAVIS_VERBOSE=${DRUPAL_TRAVIS_VERBOSE:-false}
 
+DRUPAL_TRAVIS_COMPOSER_PROJECT=${DRUPAL_TRAVIS_COMPOSER_PROJECT:-"drupal-composer/drupal-project"}
+
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TRAVIS_PROJECT_BASEDIR=${DRUPAL_TRAVIS_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
 
 # The type of the project, could be "drupal-module" "drupal-theme" "drupal-profile" or "project".
 DRUPAL_TRAVIS_PROJECT_TYPE=${DRUPAL_TRAVIS_PROJECT_TYPE:-$(jq -er '.type // "project"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
+
+# Setting this to a filename, creates a dump from an installation, that can be used by all tests, instead of reinstalling
+# for every test. This is currently supported only by the thunder distribution.
+DRUPAL_TRAVIS_TEST_DUMP_FILE=${DRUPAL_TRAVIS_TEST_DUMP_FILE:-""}
 
 # The drupal profile that is used in the tests.
 DRUPAL_TRAVIS_TEST_PROFILE=${DRUPAL_TRAVIS_TEST_PROFILE:-minimal}
@@ -55,7 +61,7 @@ DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendo
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported.
-DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-^8.6}
+DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-""}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.

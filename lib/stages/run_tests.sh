@@ -14,8 +14,8 @@ _stage_run_tests() {
        test_selection="${test_selection} --group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-    if [[ -f database-dump.php ]]; then
-        export thunderDumpFile=database-dump.php
+    if [[ -f ${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
+        export thunderDumpFile=${DRUPAL_TRAVIS_TEST_DUMP_FILE}
     fi
 
     if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
