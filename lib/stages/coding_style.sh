@@ -30,6 +30,11 @@ __test_javascript_coding_styles() {
 
     printf "Checking javascript coding styles\n\n"
 
+    if ! [[ -x "$(command -v npm)" ]]; then
+        printf "npm not fount, please install npm to test javascript coding styles\n"
+        return;
+    fi
+
     if ! [[ -x "$(command -v eslint)" ]]; then
         npm install -g eslint
     fi
