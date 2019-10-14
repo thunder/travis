@@ -18,7 +18,6 @@ _stage_run_tests() {
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-
     if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
        test_selection="${test_selection} --filter ${DRUPAL_TRAVIS_TEST_FILTER}"
     fi
