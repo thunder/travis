@@ -79,7 +79,7 @@ DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
 
 # The selenium chrome docker version to use. defaults to the latest version.
-DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-palladium}
+DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
 
 # The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
 # When selenium is used, specify DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION instead.
