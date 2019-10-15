@@ -31,7 +31,7 @@ __test_javascript_coding_styles() {
     printf "Checking javascript coding styles\n\n"
 
     if ! [[ -x "$(command -v npm)" ]]; then
-        printf "npm not fount, please install npm to test javascript coding styles\n"
+        printf "npm not found, please install npm to test javascript coding styles\n"
         return;
     fi
 
