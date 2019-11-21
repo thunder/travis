@@ -16,9 +16,9 @@ _stage_deprecation() {
     if ${DRUPAL_TRAVIS_TEST_DEPRECATION_DRUPAL_CHECK}; then
         # We need to do a new installation for the deprecation test, since we might want to test against a different
         # Drupal version.
-        local installation_directory="${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}"/deprecation-check-installation
-        pwd
-        echo "${installation_directory}"
+        local installation_directory=deprecation-check-installation
+
+        pushd "${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}"
         composer create-project drupal-composer/drupal-project:8.x-dev "${installation_directory}" --stability dev --no-interaction --no-install
 
         # Add asset-packagist for projects, that require frontend assets
@@ -53,5 +53,7 @@ _stage_deprecation() {
         cd - || exit
 
         rm -rf "${installation_directory}"
+
+        popd
     fi
 }
