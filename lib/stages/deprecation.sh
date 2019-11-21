@@ -47,10 +47,9 @@ _stage_deprecation() {
 
         composer require mglaman/drupal-check --no-update
 
-        pwd
-
-        echo "Install drupal.ckeck instance"
         COMPOSER_MEMORY_LIMIT=-1 composer install
+
+        ls -la web/modules/contrib
         vendor/bin/drupal-check web/"${project_location}"
 
         cd - || exit
