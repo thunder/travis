@@ -23,24 +23,23 @@ get_composer_bin_directory() {
 }
 
 get_project_location() {
-    local docroot=$(get_distribution_docroot)
     local project_type_test_location=""
 
     if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} != "" ]]; then
-        project_type_test_location="${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"
+        project_type_test_location="${DRUPAL_TRAVIS_TEST_LOCATION}"
     else
         case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
             drupal-module)
-                project_type_test_location="${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                project_type_test_location="modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
                 ;;
             drupal-profile)
-                project_type_test_location="${docroot}/profiles/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                project_type_test_location="profiles/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
                 ;;
             drupal-theme)
-                project_type_test_location="${docroot}/themes/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
+                project_type_test_location="themes/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"
                 ;;
              *)
-                project_type_test_location="${docroot}"
+                project_type_test_location=""
         esac
     fi
     echo "${project_type_test_location}"

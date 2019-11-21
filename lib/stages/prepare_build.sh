@@ -20,7 +20,7 @@ _stage_prepare_build() {
     composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     # Require phpstan.
-    if ${DRUPAL_TRAVIS_TEST_DEPRECATION}; then
+    if ${DRUPAL_TRAVIS_TEST_DEPRECATION_PHPSTAN}; then
         composer require phpstan/phpstan:0.11.6 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         composer require mglaman/phpstan-drupal:^0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         composer require phpstan/phpstan-deprecation-rules:0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}

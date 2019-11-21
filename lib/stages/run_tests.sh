@@ -22,7 +22,7 @@ _stage_run_tests() {
        test_selection="${test_selection} --filter ${DRUPAL_TRAVIS_TEST_FILTER}"
     fi
 
-    local runtest="php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location}"
+    local runtest="php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/${project_location}"
 
     eval "${runtest}" || exit 1
 }

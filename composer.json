@@ -20,6 +20,7 @@
         "php": ">=7.0",
         "drupal/coder": "^8.2.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
-        "symfony/yaml": "^3.4"
+        "symfony/yaml": "^3.4",
+        "mglaman/drupal-check": "^1.0"
     }
 }

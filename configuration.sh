@@ -43,8 +43,14 @@ DRUPAL_TRAVIS_TEST_JAVASCRIPT=${DRUPAL_TRAVIS_TEST_JAVASCRIPT:-true}
 # By default php coding styles are tested.
 DRUPAL_TRAVIS_TEST_PHP=${DRUPAL_TRAVIS_TEST_PHP:-true}
 
-# Boolean value if deprecation testing should be done.
-DRUPAL_TRAVIS_TEST_DEPRECATION=${DRUPAL_TRAVIS_TEST_DEPRECATION:-test -f phpstan.neon}
+# Boolean value if deprecation testing with phpstan should be done.
+DRUPAL_TRAVIS_TEST_DEPRECATION_PHPSTAN=${DRUPAL_TRAVIS_TEST_DEPRECATION_PHPSTAN:-test -f phpstan.neon}
+
+# Boolean value if Drupal deprecation testing with drupal-check should be done.
+DRUPAL_TRAVIS_TEST_DEPRECATION_DRUPAL_CHECK=${DRUPAL_TRAVIS_TEST_DEPRECATION_DRUPAL_CHECK:-true}
+
+# The drupal version drupal_check should be done against.
+DRUPAL_TRAVIS_TEST_DEPRECATION_DRUPAL_CHECK_DRUPAL_VERSION=${DRUPAL_TRAVIS_TEST_DEPRECATION_DRUPAL_CHECK_DRUPAL_VERSION:-~8.8.0}
 
 # The files pattern to ignore when testing php coding styles.
 DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendor/*,*/core/*,*/autoload.php,*.md}
