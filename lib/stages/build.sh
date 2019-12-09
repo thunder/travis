@@ -11,10 +11,9 @@ _stage_build() {
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     COMPOSER_MEMORY_LIMIT=-1 composer install
 
-    # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but
-    # this sometimes fails.
+    # Something is wrong, if index.php is missing.
     if [[ ! -f ${docroot}/index.php ]]; then
-        composer drupal:scaffold
+        exit 1
     fi
 
     # Back to previous directory.
