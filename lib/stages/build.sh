@@ -4,7 +4,6 @@
 _stage_build() {
     printf "Building the project.\n\n"
 
-    local drupal_version
     local docroot=$(get_distribution_docroot)
     local libraries=${docroot}/libraries;
 
