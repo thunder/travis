@@ -11,8 +11,8 @@ _stage_build() {
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     COMPOSER_MEMORY_LIMIT=-1 composer install
 
-    # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but
-    # this sometimes fails.
+    # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but this fails for
+    # Drupal version < 8.8. This should be removed, once 8.7 support is gone.
     if [[ ! -f ${docroot}/index.php ]]; then
         composer remove drupal/core-composer-scaffold --no-update
         composer require drupal-composer/drupal-scaffold
