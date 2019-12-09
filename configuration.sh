@@ -51,7 +51,7 @@ DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendo
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported.
-DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-^8.7}
+DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-^8.6}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.
