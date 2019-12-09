@@ -17,6 +17,7 @@ _stage_prepare_build() {
 
     # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
     composer require drupal/core-recommended:${DRUPAL_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require drush/drush --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require drupal/core-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     # Install without core-composer-scaffold until we know, what version of core is used.
