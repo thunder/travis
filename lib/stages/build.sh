@@ -12,18 +12,18 @@ _stage_build() {
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     COMPOSER_MEMORY_LIMIT=-1 composer install
 
-    drupal_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
+    local installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
+    local major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
+    local minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
 
-    echo "${drupal_version}"
-    exit 1
-
-    # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but this fails for
-    # Drupal version < 8.8. This should be removed, once 8.7 support is gone.
-    if [[ ! -f ${docroot}/index.php ]]; then
-        composer remove drupal/core-composer-scaffold --no-update
+    # When we are having Drupal 9 or if we are on at least Drupal 8.8, use core scaffold. Otherwise use the legacy scaffolding.
+    if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt "8" ]]; then
+        composer require drupal/core-composer-scaffold
+    else
         composer require drupal-composer/drupal-scaffold
-        composer drupal:scaffold
     fi
+
+    composer drupal:scaffold
 
     # Back to previous directory.
     cd -
