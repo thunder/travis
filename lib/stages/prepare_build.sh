@@ -10,7 +10,7 @@ _stage_prepare_build() {
     printf "Prepare composer.json\n\n"
 
     # Build is based on drupal project
-    composer create-project drupal/recommended-project:8.x-dev ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
+    composer create-project drupal/recommended-project ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
 
     # Add asset-packagist for projects, that require frontend assets
     composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
