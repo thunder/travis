@@ -26,7 +26,6 @@ env:
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
     - DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN="*.md"
-    - DRUPAL_TRAVIS_DRUPAL_VERSION=~8.7.0
 
 before_install:
   - composer config repositories.drupal composer https://packages.drupal.org/8
