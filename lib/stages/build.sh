@@ -9,11 +9,7 @@ _stage_build() {
 
     # Install all dependencies
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    COMPOSER_MEMORY_LIMIT=-1 composer install
-
-    local installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
-    local major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
-    local minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
+    COMPOSER_MEMORY_LIMIT=-1 composer update
 
     # Back to previous directory.
     cd -
