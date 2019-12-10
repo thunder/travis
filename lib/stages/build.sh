@@ -17,7 +17,7 @@ _stage_build() {
 
     # When we are having Drupal 9 or if we are on at least Drupal 8.8, use core scaffold. Otherwise use the legacy scaffolding.
     if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt 7 ]]; then
-        composer require drupal/core-composer-scaffold
+        composer require drupal/core-composer-scaffolddrupal-composer/drupal-project
     else
         composer require drupal-composer/drupal-scaffold
         composer drupal:scaffold
