@@ -43,5 +43,9 @@ _stage_build() {
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
-    echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY}' ];" >> ${sites_directory}/settings.php
+    if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt 7 ]]; then
+        echo "\$settings['config_sync_directory'] = '${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY}';" >> ${sites_directory}/settings.php
+    else
+        echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY}' ];" >> ${sites_directory}/settings.php
+    fi
 }
