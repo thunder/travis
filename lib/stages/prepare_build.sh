@@ -21,9 +21,6 @@ _stage_prepare_build() {
     composer require drupal/core-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require drush/drush --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
-    # Install without core-composer-scaffold until we know, what version of core is used.
-    composer remove drupal/core-composer-scaffold --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-
     # Require phpstan.
     if ${DRUPAL_TRAVIS_TEST_DEPRECATION}; then
         composer require phpstan/phpstan:0.11.6 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
