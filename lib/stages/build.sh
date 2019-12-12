@@ -9,7 +9,7 @@ _stage_build() {
 
     # Install all dependencies
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    COMPOSER_MEMORY_LIMIT=-1 composer update
+    composer update
 
     local installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     local major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
@@ -17,9 +17,9 @@ _stage_build() {
 
     # When we are having Drupal 9 or if we are on at least Drupal 8.8, use core scaffold. Otherwise use the legacy scaffolding.
     if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt 7 ]]; then
-        COMPOSER_MEMORY_LIMIT=-1 composer require drupal/core-composer-scaffold
+        composer require drupal/core-composer-scaffold
     else
-        COMPOSER_MEMORY_LIMIT=-1 composer require drupal-composer/drupal-scaffold
+        composer require drupal-composer/drupal-scaffold
         composer drupal:scaffold
     fi
 
