@@ -8,6 +8,7 @@ _stage_deprecation() {
     if ${DRUPAL_TRAVIS_TEST_DEPRECATION}; then
         cp phpstan.neon ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        vendor/bin/phpstan analyse --memory-limit 300M ${project_location} -q || true
         vendor/bin/phpstan analyse --memory-limit 300M ${project_location}
         cd -
     fi
