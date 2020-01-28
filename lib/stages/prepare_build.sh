@@ -13,7 +13,7 @@ _stage_prepare_build() {
     composer create-project ${DRUPAL_TRAVIS_COMPOSER_PROJECT} ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
 
     # Add asset-packagist for projects, that require frontend assets
-    if [[ ${DRUPAL_TRAVIS_COMPOSER_PROJECT} = "drupal-composer/drupal-project" ]]; then
+    if ! composer_repository_exists "https://asset-packagist.org"; then
         composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     fi
 
