@@ -2,8 +2,8 @@
 # Use this file as reference on what you can configure. You can set each of these variables in the environment
 # to override the default values.
 
-# Set ${TRAVIS} to false on non travis builds.
-TRAVIS=${TRAVIS:-false}
+# Set ${CI} to false on non CI builds, for github actions we need to provide a fallback. Github does not support the CI environment variable.
+CI=${CI:-${GITHUB_ACTIONS:-false}}
 
 # Generate more verbose output, defaults to false. Can also be set to true by providing the -v parameter to the invoking command.
 DRUPAL_TRAVIS_VERBOSE=${DRUPAL_TRAVIS_VERBOSE:-false}
@@ -119,8 +119,8 @@ DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 # The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
 DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
 
-# The database engine to use. For travis runs this defaults to mysql, local runs will default to sqlite.
-if ${TRAVIS}; then
+# The database engine to use. For CI runs this defaults to mysql, local runs will default to sqlite.
+if ${CI}; then
     DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"mysql"}
 else
     DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"sqlite"}
