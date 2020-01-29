@@ -17,6 +17,7 @@ cache:
 branches:
   only:
     - master
+    - improve/thunder-testing
 
 env:
   matrix:
