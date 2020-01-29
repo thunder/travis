@@ -3,13 +3,18 @@
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.
 # thunder_project builds into docroot instead of web.
 get_distribution_docroot() {
+    local absolute=${1:-true}
     local docroot="web"
 
     if [[ ${DRUPAL_TRAVIS_COMPOSER_PROJECT} =~ ^thunder/thunder-project.* ]]; then
         docroot="docroot"
     fi
 
-    echo "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
+    if ${absolute}; then
+      echo "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
+    else
+      echo ${docroot}
+    fi
 }
 
 get_composer_bin_directory() {

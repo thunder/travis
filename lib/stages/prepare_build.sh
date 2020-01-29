@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 _stage_prepare_build() {
+    local docroot=$(get_distribution_docroot false)
+
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TRAVIS_PROJECT_TYPE} = "project" ]]; then
         rsync --archive --exclude=".git" ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/ ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -15,6 +17,11 @@ _stage_prepare_build() {
     # Add asset-packagist for projects, that require frontend assets
     if ! composer_repository_exists "https://asset-packagist.org"; then
         composer config repositories.assets composer https://asset-packagist.org --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer config extra."installer-types".0 bower-asset --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer config extra."installer-types".1 npm-asset --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+
+        jq '.extra."installer-paths"."'${docroot}'/libraries/{$name}" += ["type:bower-asset", "type:npm-asset"]' ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json" > ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.tmp"
+        mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.tmp" ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json"
     fi
 
     # Require the specific Drupal core version we need, as well as the corresponding dev-requirements

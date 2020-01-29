@@ -9,7 +9,7 @@ _stage_build() {
 
     # Install all dependencies
     cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    COMPOSER_MEMORY_LIMIT=-1 composer update
+    composer update
 
     local installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     local major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
@@ -20,8 +20,8 @@ _stage_build() {
         composer require drupal/core-composer-scaffold
     else
         composer require drupal-composer/drupal-scaffold
-        composer drupal:scaffold
     fi
+    composer drupal:scaffold
 
     # Back to previous directory.
     cd -
