@@ -86,7 +86,7 @@ DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 
 # Use selenium to spawn chromedriver. On travis we want to do that, to be able to use the selenium docker.
 # On local development calling chromedriver directly is more straight forward.
-DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
+DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${CI}}
 
 # The selenium chrome docker version to use. defaults to the latest version.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
