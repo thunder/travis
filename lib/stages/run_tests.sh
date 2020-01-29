@@ -19,7 +19,7 @@ _stage_run_tests() {
     fi
 
     if [[ -f ${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
-        export thunderDumpFile=${DRUPAL_TRAVIS_TEST_DUMP_FILE}
+        export thunderDumpFile=${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE}
     fi
 
     if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
