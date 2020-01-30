@@ -18,7 +18,7 @@ _stage_run_tests() {
        test_selection="${test_selection} --group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 
-    if [[ -f ${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
+    if [[ -f ${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
         export thunderDumpFile=${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE}
     fi
 
