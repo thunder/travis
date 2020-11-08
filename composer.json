@@ -19,7 +19,7 @@
     "require": {
         "php": ">=7.0",
         "drupal/coder": "^8.2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "symfony/yaml": "^3.4"
     }
 }
